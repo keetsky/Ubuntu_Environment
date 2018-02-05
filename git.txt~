@@ -217,3 +217,11 @@ Git仓库处理：
 
 		[credential]
 			helper = store
+
+
+
+    2. failed to push some refs to git 
+       出现错误的主要原因是github中的README.md文件不在本地代码目录中
+     解决:
+        git pull --rebase origin master 
+        git push -u origin master 
