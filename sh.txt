@@ -1,0 +1,80 @@
+#!/bin/sh     			#必须开头为此
+#http://www.runoob.com/linux/linux-shell.html
+newterminal()
+{
+  sleep 2;
+  cd /home/hit/Desktop/trartsh/;
+  gnome-terminal -x bash -c "./control.sh;exec bash;";  #打开一个新窗口并执行./control.sh
+}
+
+darknet()
+{
+  sleep 4;
+
+  cd /home/hit/Desktop/trartsh/;
+  gnome-terminal -x bash -c "./darknet.sh;exec bash;"; 	
+		 
+}
+
+
+echo 'start to learning sh!\n';
+mkdir dd;
+cd dd;
+touch start.txt;
+echo '123456' | sudo -S chmod +x start.txt; 	#执行sudo自动输入密码123456
+
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j4
+
+#变量
+	a="hello word"				#字符串可以用单引号，也可以用双引号，也可以不用引号
+	b=2					#变量赋值，加括号是为了识别边界
+	echo $a
+	echo "a is :${a}"
+	echo "b is :${b}"
+  只读变量
+ 	myUrl="http://www.w3cschool.cc"
+	readonly myUrl
+  删除变量：不能删除只读变量
+	unset variable_name
+  获取字符长度：
+	echo ${#a}
+  提取子字符串：
+	echo ${a:1:4} #输出为ello
+数组：
+  	array_name=(value0 value1 value2 value3)
+	array_name[0]=value0
+	valuen=${array_name[0]} 	#读取数组元素值
+	echo ${array_name[@]}		#获取数组中的所有元素
+	length=${#array_name[@]}	# 取得数组元素的个数
+	lengthn=${#array_name[0]}	# 取得数组单个元素的长度
+
+
+
+#if语句
+if [ ];then
+
+elif[ ];then
+
+else
+
+fi
+#for循环
+for skill in Ada Coffe Action Java; do
+    echo "I am good at ${skill} "
+done
+
+
+
+newterminal &  darknet              #并列运行
+
+
+
+
+
+
+
+
+

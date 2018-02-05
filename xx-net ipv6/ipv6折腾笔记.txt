@@ -1,0 +1,98 @@
+ipv6折腾笔记
+96 粗识名姓 关注
+2017.10.06 23:27* 字数 943 阅读 4514评论 16喜欢 7赞赏 2
+主要参考文献：设置Teredo访问IPv6
+次要参考：在家轻轻松松上IPv6站点之Teredo篇
+其它有价值参考：很给力的teredo隧道，netsh int ip reset gives "access denied"
+IPv6 at home, Part 1: Overview, Teredo
+
+最近的GFW更“给力”了，原因大家都懂的从前用的梯子XX-Net尽管最近更新频繁，但还是渐渐乏力！看到讨论中频繁的提到ipv6可以根治梯子乏力的毛病，折腾的兴趣被勾起...
+中间的诸多波折就不一一尽述了，直接记录成功的方法：
+参考次要参考中前六步的方法操作：
+
+Win+R ==> gpedit.msc ==> 计算机配置 ==> 管理模板 ==> 网络 ==> TCPIP 设置 ==> IPv6 转换技术
+主要是配置Teredo服务的几个选项，经我的测试，6to4不用管，ISATAP 启用 默认 即可。
+Teredo 默认限定 启用； 服务器名称：teredo.remlab.net（我这好用的）； 状态 启用 企业客户端（内网设置）
+
+*上述操作的命令行方式：
+
+#显示Teredo信息
+netsh interface ipv6 show teredo
+#Teredo重置
+netsh interface teredo set state default
+#Teredo设置服务器
+netsh interface teredo set state server=teredo.remlab.net
+#启用 Teredo:
+netsh interface ipv6 set teredo enterpriseclient
+#或
+netsh int ter set state enterpriseclient
+设置解析IPv6域名
+
+转换内网IPv4地址（通常为192.168.x.x格式）为IPv6地址（如：192.168.1.1转换为2002:C0A8:101:0:0:0:0:0）
+修改本地连接（或无线连接）属性中的Internet协议版本6 (TCP/IPv6)属性，指定：
+IPv6地址（如：2002:C0A8:101:0:0:0:0:0）；
+子网前缀长度 48，默认网关不填写；
+DNS服务器：
+2001:4860:4860::8888
+2001:4860:4860::8844
+
+添加路由 (这一步重启后需要重新做一遍)
+
+下面的"Teredo Tunneling Pseudo-Interface"可能每个人的连接名称不一样，要用netsh int ipv6 show int命令查看具体名称，一般情况为本地连接* 1 (后面的数字不一定)，状态为已连接(connected)
+ipconfig /all 查看 Teredo Tunneling Pseudo-Interface 使用的连接（如：隧道适配器 本地连接* 1）；
+netsh int ipv6 show int 查看上面的 本地连接* 1 使用的Idx，如22；
+netsh int ipv6 show route 如果没有::/0的记录，则：
+netsh int ipv6 add route ::/0 22 (22为上面的Idx，也就是teredo 的Idx)
+或者不管Idx，直接用名称添加:
+netsh int ipv6 add route ::/0 "Teredo Tunneling Pseudo-Interface"
+
+更改IPv6优先级
+
+netsh int ipv6 show prefix 查询IPv6的优先级，一般显示如下：
+
+优先顺序 标签 前缀
+———- —– —————–
+50 0 ::1/128
+40 1 ::/0
+30 2 2002::/16
+20 3 ::/96
+10 4 ::ffff:0:0/96
+5 5 2001::/32
+修改优先级：
+
+netsh int ipv6 set prefix 2002::/16 30 1
+netsh int ipv6 set prefix 2001::/32 5 1
+IPv6测试网站：
+———————————————
+http://www.kame.net/ IPv6可以看到活动的乌龟，IPv4乌龟不动
+http://test-ipv6.com/
+———————————————
+test-ipv6测试结果：
+不完美但够用的IPv6
+不完美但够用的IPv6
+通过上述设置后，尽管网络连接中的IPv6仍然提示“无网络访问权限”，但是此时的XX-Net可以正常开启IPv6选项
+
+无权限也够用
+无权限也够用
+补充几个常见问题
+
+由于网络环境差异，导致Teredo服务器可能连不上，尝试几次换换服务器可能成功。
+注意检查有效的Teredo接口名称，不是Teredo开头的，就是本地连接挂的，状态应该是已连接*(connected)
+路由表有多余的回路(Loopback Pseudo-Interface)占用了首选位置，需要先删除：route DELETE ::/0 再重新添加：netsh int ipv6 add route ::/0 "有效的Teredo接口名称"
+还有极个别由于系统优化的原因导致IP Helper服务被禁用的，需要手动启用
+日记本
+
+
+我最近遇到的问题：从Win 8.1升级Win 10后，ipv6就出现了无网络权限。
+
+经过试验，发现核心解决方案，仅仅是使用CMD或者Windows Power Shell执行网络配置命令即可：
+
+ipconfig /renew6
+该命令的作用就是重新获取ipv6地址，或者说是一种强制刷新。
+
+1.“Windows + X”，选择“命令提示符（管理员）”或者“Windows PowerShell（管理员）”
+
+2.输入“ipconfig /release6“并回车，释放iPv6地址（丢弃已过期的iPv6地址）
+
+3.输入“ipconfig /renew6”并回车，稍等几秒到一分钟，iPv6连接即可变为：Internet。
+

@@ -1,0 +1,58 @@
+前提：显卡驱动,CUDA,CUDNN安装完成且需要保证安装正确否则TensorFlow运行会出错,且对应的cudnn版本要对
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%python
+nanconda中安装tensorflow:假定已经安装完成nanconda
+tensorflow GPU版安装：参考官方安装教程https://www.tensorflow.org/install
+linux:
+  法1：
+	在https://github.com/tensorflow/tensorflow下载文件对应linux gpu版本的.whl文件
+	
+    创建环境：
+	$ sudo apt-get install libcupti-dev   #cuda工具接口
+	$ conda create –n tensorflow python  #或指定版本python=3.5 推荐：$ conda create -n tensorflow python=3.5 anaconda
+	$ source activate tensorflow #如果是windows 下为：activate tensorflow
+	也可不创建环境中，而直接安装在当前环境中，即不执行以上步骤
+	$ pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.1.0-cp35-cp35m-linux_x86_64.whl  #GPU版本,要求python3.5版本
+	如果下不动：可先到github下载对应  .whl 文件并修改权限放到 anaconda3/lib/python3.5/site-packages或在当前目录下运行：
+	$ pip install --ignore-installed --upgrade tensorflow_gpu-1.1.0-cp35-cp35m-linux_x86_64.whl
+	如果失败则anaconda3要改权限:
+	  sudo chmod 777 –R anaconda3	
+	  or升级下pip: 
+	  $pip install –upgrade pip
+	
+    非ananconda环境可直接：
+	sudo pip install tensorflow-0.8.0-cp27-none-linux_x86_64.whl
+  法2：通过anaconda他人上传的源安装
+	$ anaconda search –t conda tensorflow  #比如想安装jjhelmus/tensorflow 的源
+	$ anaconda show jjhelmus/tensorflow    #查看这个源的详细信息
+	$ conda install --channel https://conda.anaconda.org/jjhelmus tensorflow
+windows:
+   与linux类似。
+卸载：
+	$conda remove -n root tensorflow 
+测试：
+  	import tensorflow as tf
+	tf.__version__
+	hello = tf.constant('Hello, TensorFlow!')
+	sess = tf.Session()
+	print(sess.run(hello))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%源码安装
+    $git clone https://github.com/tensorflow/tensorflow 
+    $ cd tensorflow
+    $ git checkout r1.3  #比如安装r1.3版本
+    $ sudo apt-get install bazel
+    $ sudo apt-get install python-numpy python-dev python-pip python-wheel
+    $ sudo apt-get install python3-numpy python3-dev python3-pip python3-wheel
+    $　配置好ＧＰＵ环境
+　　　　$ sudo apt-get install libcupti-dev 
+    $cd tesnsorflow
+    $./configure
+    #Please specify the location of python. [Default is /usr/bin/python]: /usr/bin/python2.7
+    $bazel build --config=opt --config=cuda    #cpu版本:bazel build --config=opt
+    $bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+    $sudo pip install /tmp/tensorflow_pkg/tensorflow-1.3.0-py2-none-any.whl    #安装生成的.whl
+
+

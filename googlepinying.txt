@@ -1,0 +1,21 @@
+ubuntu 安装googlepinying中文输入法：
+
+1.安装汉语语言包：
+	$ sudo apt-get install language-pack-zh-hans
+2.安装谷歌拼音输入法：
+	$ sudo apt-get install fcitx-googlepinyin
+3.系统设置：
+	System Setting->Language Support
+	设置keybord input method sytem:fcitx
+	点击：Apply System-Wide
+	确保：install/Remove languages 中：english 和chinese 都打勾
+4.注销账户或重启电脑
+5.设置输入法：
+   法1：
+	System Setting->Text Entry
+	+ -> chiinese(googlePinyin)
+  法2：
+	$ fcitx-configtool
+        + ->google Pinyin
+	
+

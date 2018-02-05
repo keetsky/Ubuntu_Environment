@@ -1,0 +1,70 @@
+最新的xx-net无法配置成功不知到为什么推荐使用老版本
+问题：
+    1. 无法登入youtube
+        改 data/gae_proxy/manual.ini或data/gae_proxy/config.in文件添加下面语句然后重启xx-net     https://github.com/XX-net/XX-Net/issues/5692
+	[hosts]
+	.youtube.com = gae
+    	
+
+	
+	
+linux:
+	    sudo apt-get install Python-OpenSSL
+	    sudo apt-get install libffi-dev
+	    sudo apt-get install -y python-gtk2
+	    sudo apt-get install python-appindicator
+	    sudo apt-get install libnss3-tools(自动导入证书，需安装此包)
+	sudo apt-get install libnss3-tools
+	./start 
+	配置switchyomega:
+	    import/export->restore frome file->xx-net/SwitchyOmega/OmegaOptions.bak
+            xx-net自动切换->download profile now
+            apply changes
+	
+	双击XX-Net,google进入网页http://127.0.0.1:8085/，如果无法进入手动输入进去，
+	     configuration->点击GAE APPid空白处加载id->save 
+	proxy切换到   XX-Net自动切换
+
+
+如果有问题的话（上不去google或权限问题(“Your connection is not private”)）重新设置秘钥：
+	删除/data/gae_proxy/certs文件夹和CA.crt
+	在chrome设置中将GoAgent证书删除
+	启动./start 或(ctr+F5) #实在不行chrome设置手动导入CA.crt （推荐手动导入）
+	
+
+xx-net变成非google浏览器打开：需要设置chrome为默认浏览器
+
+
+firefox浏览器无法打开网页：
+    提示“The proxy server is refusing connections” 
+    setting->advanced->network>settings>change teh proxy server setting >no proxy
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+最近ipv4的ip数受限，很难再连接，为此需要设置使用ipv6连接
+
+linux:[web](http://www.linuxidc.com/Linux/2013-03/80479.htm)
+    安装虚拟网卡miredo:sudo apt install miredo
+    查看网卡配置ifconfig:结果看到一个teredo的虚拟网卡
+teredo    Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  
+          inet6 addr: 2001:0:53aa:64c:34a8:4a8d:50d4:bb71/32 Scope:Global
+          inet6 addr: fe80::ffff:ffff:ffff/64 Scope:Link
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1280  Metric:1
+          RX packets:108624 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:117172 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:500 
+          RX bytes:84089356 (84.0 MB)  TX bytes:12414543 (12.4 MB)
+    重启电脑，后重新开启miredo:sudo diredo
+    ipv6检测：http://test-ipv6.com/    
+          出现：成功 (2.998s) 使用 ipv6 Teredo
+
+
+win7:
+    检查microsoft teredo tunneling adapter是否启用（设备管理器－点击查看－勾选隐藏设备），如果没有需要安装
+             设备管理器-右击添加过时硬件-安装我手动从列表选择的硬件-网络适配器-厂商microsoft-型号microsoft teredo tunneling adapter-下一步
+
+
+
+
+
+   

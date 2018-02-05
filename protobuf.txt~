@@ -1,0 +1,44 @@
+版本：https://github.com/google/protobuf/releases?after=v2.6.1
+
+报错：.proto:386:3: Expected "required", "optional", or "repeated". 可能版本不够新
+
+安装：
+    $git clone https://github.com/google/protobuf.git
+    $sudo apt-get install autoconf automake libtool curl make g++ unzip
+    $./autogen.sh
+    如果显示下载文件失败，到windows系统下载googlemock-release-1.7.0.zip 和googletest-release-1.7.0.zip放入protobuf目录中，打开autogen.sh 修改相关项后，重新运行./autogen.sh
+    $./configure --prefix=/usr/local
+    $make                                   #清除编译make distclean
+    $make check 
+    $sudo make install
+    $sudo ldconfig           #/etc/profile中配置参数export LD_LIBRARY_PATH=/usr/local/lib   export PATH=$PATH:/usr/local/bin 
+    
+到此步还没有安装完毕，在/etc/profile 或者用户目录 ~/.bash_profile
+如果是$./configure --prefix=/usr/local/protobuf的化
+添加下面内容
+# export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/protobuf/lib  
+# export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/protobuf/lib  
+# export PATH=$PATH:/usr/local/protobuf/bin
+####### add protobuf lib path ########
+#(动态库搜索路径) 程序加载运行期间查找动态链接库时指定除了系统默认路径之外的其他路径
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/protobuf/lib/
+#(静态库搜索路径) 程序编译期间查找动态链接库时指定查找共享库的路径
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/protobuf/lib/
+#执行程序搜索路径
+export PATH=$PATH:/usr/local/protobuf/bin/
+#c程序头文件搜索路径
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:/usr/local/protobuf/include/
+#c++程序头文件搜索路径
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/local/protobuf/include/
+#pkg-config 路径
+export PKG_CONFIG_PATH=/usr/local/protobuf/lib/pkgconfig/
+######################################  
+问题：    
+	Leaving directory `/home/keetsky/Documents/protobuf/src'
+    
+	gtest 安装新的
+
+
+protoc --version
+sudo apt-get remove libprotobuf-dev
+

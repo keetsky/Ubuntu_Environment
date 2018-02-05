@@ -1,0 +1,24 @@
+昨天重装了Windows 10后，开机不进入Ubuntu的启动引导而是直接进入新的Windows系统。一般来说先装Windows再装Linux不会出现引导坏掉的问题；而先装Linux后装Windows出现的引导问题可以用EasyBCD的legacy与grub2解决。
+
+1. 制作Ubuntu启动盘，进入选择启动驱动器界面，选择Ubuntu启动U盘，进入try Ubuntu without installing。
+
+2. 打开terminal，添加boot-repair的ppa源：
+
+sudo add-apt-repository ppa:yannubuntu/boot-repair
+如果添加不了ppa源，尝试重装CA证书：
+
+sudo apt-get install --reinstall ca-certificates
+再重新添加boot-repair。
+
+3. 更新系统软件
+
+sudo apt-get update
+4. 安装boot-repair
+
+sudo apt-get install boot-repair
+5. 在Dash中搜索boot-repair，打开后选择第一项，recommended repair，完成后即可恢复Ubuntu引导。
+
+作者：珠箔飘灯
+链接：https://www.jianshu.com/p/028c17fb158c
+來源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

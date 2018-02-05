@@ -1,0 +1,558 @@
+windows:http://blog.csdn.net/lsq2902101015/article/details/47004175
+
+
+
+https://www.scivision.co/install-opencv-python-windows/
+
+opencv基本上是搞CV必备套件之一了，支持的语言也非常多，但是安装起来有点麻烦（如果是在conda下安装的话则可以用conda install -c menpo opencv3=3.2.0）。需要注意的是，pip可以安装的opencv-python安装并不依赖opencv，只是封装了opencv的Python API，一般情况下也够用。但是如果准备安装完整版本的opencv，这里比较建议将opencv-python卸载，以免之后产生一些不必要的报错。
+版本查看：
+    $pkg-config --modversion opencv
+     pkg-config --cflags opencv  
+     pkg-config --libs opencv 
+
+
+
+anaconda:
+  (1). $pip install --upgrade pip
+       $pip install opencvda***dfd.whl		  #安装已下载的包或.whl文件
+       #下载地址：http://www.lfd.uci.edu/~gohlke/pythonlibs/#opencv
+  (2). $anaconda search -t conda opencv3
+       $anaconda show  menpo/opencv3
+       $conda install --channel https://conda.anaconda.org/menpo opencv3
+  (3). $conda install -c menpo opencv3  推荐                       conda install -c https://conda.binstar.org/menpo opencv
+多版本切换：再别的地方安装新的opencv
+  (1).安装opencv3.2
+	修改cmakelists,修改安装路径:set(CMAKE_INSTALL_PREFIX "/usr/local/opencv/3.20" CACHE PATH "Installation Directory")         即：将/user/local替换掉
+	安装：为了支持python不同版本需要先安装完python2 和python3
+	      $sudo apt-get install build-essential
+	      $sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+	      $sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+              有的wei:cmake -DBUILD_TIFF=ON -DBUILD_opencv_java=OFF -DWITH_CUDA=OFF -DENABLE_AVX=ON -DWITH_OPENGL=ON -DWITH_OPENCL=ON -DWITH_IPP=ON -DWITH_TBB=ON -DWITH_EIGEN=ON -DWITH_V4L=ON -DWITH_VTK=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_opencv_python2=OFF -DCMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") -DPYTHON3_EXECUTABLE=$(which python3) -DPYTHON3_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") -DPYTHON3_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") ..
+	      $cd opencv-3.2.0
+	      $mkdir build 
+	      $cd build
+	      $cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_TBB=ON  -D WITH_V4L=ON -D WITH_GTK=ON -D CMAKE_INSTALL_PREFIX=/usr/local/opencv/3.20 ..          
+              $make -j4
+              $sudo make install -j4   
+  (2).配置
+        $sudo gedit ~/.bashrc
+	添加：export PKG_CONFIG_PATH=/usr/local/opencv/3.20/lib/pkgconfig  #export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+	      export LD_LIBRARY_PATH=/usr/local/opencv/3.20/lib  #export LD_LIBRARY_PATH=/usr/local/lib
+	$source ~/.bashrc
+  (3).如果想修改回，则只需要修改PKG_CONFIG_PATH  LD_LIBRARY_PATH 或注销这2句
+  (4).使用：上面的这些过程并不能保证在写makefile中调用的是3.10版本的库，可能还是调用之前的2.4.10的库，具体还是要在CMakeList.txt中指定要找的opencv的目录
+	cmake_minimum_required(VERSION 2.8)  
+	set (OpenCV_DIR "/usr/local/opencv/3.20/build")  
+	project(myTest) 
+    或
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FORCE_INLINES")	
+	set(CMAKE_PREFIX_PATH "/usr/local/opencv/3.20/share/OpenCV")
+
+问题：  import cv2 
+	cv2.__version__
+	python出现no module named cv2需要安装  
+	$sudo apt-get purge python-opencv
+	$sudo apt-get update	
+	$pip install opencv-python   或 sudo apt-get install python-openCV
+
+
+通过GUI选择配置：
+	sudo apt-get install cmake-curses-gui
+	进入opencv安装目录下的build
+	ccmake .
+	添加python3路径
+
+	或
+	sudo apt-get install cmake-qt-gui
+	mkdir build
+	cd build
+	cmake-gui
+	
+	
+
+
+对于python3安装opencv3.2:因为opencv默认是安装支持python2的如果需要支持python3
+	$cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/opencv/3.20 PYTHON3_EXECUTABLE = /usr/bin/python3 PYTHON_INCLUDE_DIR = /usr/include/python3.4 PYTHON_INCLUDE_DIR2 = /usr/include/x86_64-linux-gnu/python3.4m PYTHON_LIBRARY = /usr/lib/x86_64-linux-gnu-python3/libpython3.4m.so PYTHON3_NUMPY_INCLUDE_DIRS = /usr/local/lib/python3.4/dist-packages/numpy/core/include/ ..
+	$make -j4
+	$sudo make install
+
+
+问题1.
+	cvRound not find ,重新配置下opencv环境. .bashrc
+
+
+
+
+#######################################
+http://www.cnblogs.com/arkenstone/p/6490017.html
+
+
+
+sudo apt-get install --assume-yes libopencv-dev build-essential cmake git libgtk2.0-dev pkg-config python-dev python-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libv4l-dev libtbb-dev libqt4-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev x264 v4l-utils unzip
+
+sudo apt-get install build-essential cmake git
+
+sudo apt-get install ffmpeg libopencv-dev libgtk-3-dev python-numpy python3-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libv4l-dev libtbb-dev qtbase5-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev x264 v4l-utils unzip
+
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D WITH_V4L=ON -D WITH_QT=ON -D WITH_OPENGL=ON -DCUDA_NVCC_FLAGS="-D_FORCE_INLINES" ..
+
+安装了cuda基础上安装opencv,是否运行与CUDA支持，检查cmake的输出，确认CUDA和CUBLAS将被安装
+cmake -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D INSTALL_C_EXAMPLES=OFF -D INSTALL_PYTHON_EXAMPLES=OFF -D BUILD_EXAMPLES=OFF -D WITH_QT=ON -D WITH_OPENGL=ON -D ENABLE_FAST_MATH=1 -D WITH_CUDA=ON -D CUDA_FAST_MATH=1 -D WITH_CUBLAS=1 -D CUDA_GENERATION=Auto -D WITH_GSTREAMER_0_10=OFF ..  
+或
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_CUDA=ON -D ENABLE_FAST_MATH=ON -D CUDA_FAST_MATH=ON -D WITH_CUBLAS=1 -D WITH_NVCUVID=on -D CUDA_GENERATION=Auto ..            #试通过
+
+
+make -j8
+sudo make install
+sudo /bin/bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
+sudo ldconfig
+
+重启
+sudo apt-get install checkinstall
+sudo checkinstall
+
+使用checkinstall的目的是为了更好的管理我安装的opencv，因为opencv的安装很麻烦，卸载更麻烦，其安装的时候修改了一大堆的文件，当我想使用别的版本的opencv时，将当前版本的opencv卸载就是一件头疼的事情，因此需要使用checkinstall来管理我的安装。 
+执行了checkinstall后，会在build文件下生成一个以backup开头的.tgz的备份文件和一个以build开头的.deb安装文件，当你想卸载当前的opencv时，直接执行dpkg -r build即可。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######cmake 提示ippicv下载失败
+https://github.com/opencv/opencv_3rdparty/branches/all
+http://m.blog.csdn.net/Kelvin_Yan/article/details/53635641
+http://m.blog.csdn.net/Kelvin_Yan/article/details/53635641
+下载失败时候手动下载ippicv_linux_20151201.tgz  放入opencv-3.1.0/3rdparty/ippicv/downloads/linux-808b791a6eac9ed78d32a7666804320e
+#mkdir -p opencv-3.2.0/3rdparty/ippicv/downloads/linux-808b791a6eac9ed78d32a7666804320e
+wget http://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/o/op/opencvlibrary/3rdparty/ippicv/ippicv_macosx_20141027.tgz
+
+wget -O ippicv_linux_20151201.tgz https://raw.githubusercontent.com/opencv/opencv_3rdparty/81a676001ca8075ada498583e4166079e5744668/ippicv/ippicv_linux_20151201.tgz
+
+问题：对于opecv3.3如果提示下载ippicv失败，可到https://github.com/opencv/opencv_3rdparty/tree/ippicv/master_20170822下载放到下目录并更改文件名
+	CMakeDownloadLog.txt:
+	cmake_download "opencv-master/.cache/ippicv/4e0352ce96473837b1d671ce87f17359-ippicv_2017u3_lnx_intel64_general_20170822.tgz"
+
+
+
+
+
+
+
+################################################################################################
+参考网站：
+	http://www.cnblogs.com/arkenstone/p/6490017.html
+	http://poodar.me/Ubuntu-16.04-+-CUDA8.0-+-OpenCV-3.2.0-+-Anaconda-Python-3.6/
+	http://www.codesofinterest.com/2017/01/installing-opencv-source-ubuntu.html
+	http://www.pyimagesearch.com/2015/07/20/install-opencv-3-0-and-python-3-4-on-ubuntu/
+
+	http://blog.topspeedsnail.com/archives/4755
+	http://thaim.hatenablog.jp/entry/2016/07/11/004631
+	http://blog.csdn.net/fanzhiyi521/article/details/53456169
+
+
+
+
+
+先按照python3，编译opencv3同时支持python和python3，需要设置编译器，如果不设置则默认安装python2中,只支持python2,如果需要支持cuda，需要先安装好cuda后cmake配置：
+
+    安装依赖包：
+	$ sudo apt-get install build-essential
+	$ sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+	$ sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev # 处理图像所需的包
+	$ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev liblapacke-dev
+	$ sudo apt-get install libxvidcore-dev libx264-dev # 处理视频所需的包
+	$ sudo apt-get install libatlas-base-dev gfortran # 优化opencv功能
+	$ sudo apt-get install ffmpeg
+    下载opencv:
+    github这里需要下载opencv和opencv_contrib（后者会在cmake配置的时候用到），这是因为opencv3以后SIFT和SURF之类的属性被移到了contrib中
+    设置编译器：
+	cmake -D CMAKE_BUILD_TYPE=RELEASE \
+-D CMAKE_INSTALL_PREFIX=/usr/local \
+-D WITH_CUDA=ON \
+-D WITH_QT=OFF \
+-D WITH_OPENGL=ON \
+-D OPENCV_EXTRA_MODULES_PATH=/home/poodar/libs/opencv_contrib/modules \
+-D ENABLE_FAST_MATH=ON \
+-D CUDA_FAST_MATH=ON \
+-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
+-D WITH_CUBLAS=ON \
+-D BUILD_OPENCV_PYTHON3=ON \
+-D PYTHON3_EXECUTABLE=/home/poodar/libs/anaconda3/bin/python \
+-D PYTHON3_INCLUDE_PATH=/home/poodar/libs/anaconda3/include/python3.6m \
+-D PYTHON3_LIBRARIES=/home/poodar/libs/anaconda3/lib/python3.6/site-packages \
+-D OPENCV_ENABLE_NONFREE=ON \
+-D WITH_TBB=ON \
+-D WITH_V4L=ON \
+-D INSTALL_C_EXAMPLES=OFF \
+-D BUILD_SHARED_LIBS=ON \
+..
+
+	// you need to carefully check the cmake output to install every NOT FOUND lib.the last one sys/videoio.h can be ignored, it don't intevere compilation
+	如果只安装在ananconda中：
+		-D CMAKE_INSTALL_PREFIX=/home/fanzong/anaconda2/envs/python3.5
+		
+	如果需要支持cuda添加：
+		-D DCUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
+	 	-D CUDA_ARCH_BIN="6.1" \ # 这个需要去官网确认使用的GPU所对应的版本[查看这里](https://developer.nvidia.com/cuda-gpus)
+		-D CUDA_ARCH_PTX="" \
+    		-D CUDA_FAST_MATH=ON \    # 计算速度更快但是相对不精确
+	也可以通过$ccmake ..      图形界面来设置（推荐）,
+    安装：
+	$make -j4
+	$sudo make install
+	$sudo ldconfig
+    链接:
+	$cd /usr/local/lib/python3.5/site-packages/
+	$sudo cp cv2.cpython-35m-x86_64-linux-gnu.so cv2.so
+	$cd anaconda3/envs/tensor/lib/python3.5/site-packages        进入python3目录
+	$ln -s /usr/local/lib/python3.5/site-packages/cv2.cpython-35m.so cv2.so  #或编译完了后，拷贝build/lib/python3/cv2*.so 到 anaconda3/envs/tensor/lib/python3.5/site-packages里就可以了
+
+
+
+
+问题：pip install opencv-python  // python程序导入cv2包时报错，version `GLIBCXX_3.4.21' not found
+
+
+
+
+
+
+
+##################################成功
+
+
+http://blog.topspeedsnail.com/archives/4755
+http://blog.csdn.net/fanzhiyi521/article/details/53456169
+http://lylec.coding.me/2016/03/17/python-opencv/
+推荐下载opencv-3.2.0
+
+
+本帖记录在Ubuntu 16.04上安装OpenCV的步骤，并分别安装Python 2和Python 3的绑定。如果你只用C++接口，可以忽略Python的安装。
+
+Ubuntu 16.04系统默认安装了两个Python版本：Python2核Python3，默认的版本还是Python2。本帖安装的OpenCV同时支持这两个版本。
+#1 安装OpenCV依赖
+
+升级系统：
+$ sudo apt-get update
+$ sudo apt-get upgrade
+
+安装基本编译工具：
+$ sudo apt-get install build-essential cmake pkg-config git
+
+由于OpenCV是计算机视觉库，总需要加载一些图像文件（ JPEG, PNG, TIFF）。使用下面命令安装一些必要的图像库：
+$ sudo apt-get install libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev
+
+除了图片之外，OpenCV还要处理视频文件。使用下面命令安装一些视频编解码库：
+	
+$ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+$ sudo apt-get install libxvidcore-dev libx264-dev
+
+OpenCV的GUI模块highgui依赖Gtk。安装gtk库：
+$ sudo apt-get install   libgtk2.0-dev libgtk-3-dev
+
+下面安装一些可以提高OpenCV性能的库，如矩阵操作：
+$ sudo apt-get install libatlas-base-dev gfortran
+
+安装Python2和Python3的开发库：
+$ sudo apt-get install python2.7-dev python3.5-dev
+sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+#2 下载OpenCV源码
+
+目前OpenCV的最新稳定版是3.2.0，你可以去Github OpenCV项目主页查看最新版本。
+$ cd ~
+$ wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.2.0.zip
+$ unzip opencv.zip
+
+or 
+
+$ git clone https://github.com/Itseez/opencv.git
+$ cd opencv
+$ git checkout 3.1.0
+
+下载和OpenCV版本对应的opencv_contrib（一些扩展功能和non-free代码）：
+$ wget -O opencv_contrib.zip https://github.com/Itseez/opencv_contrib/archive/3.2.0.zip
+$ unzip opencv_contrib.zip
+
+or
+	
+$ cd ~
+$ git clone https://github.com/Itseez/opencv_contrib.git
+$ cd opencv_contrib
+$ git checkout 3.2.0
+
+注意：opencv和opencv_contrib的版本要一致。
+#3 创建Python虚拟环境
+
+虚拟环境可以保持Python开发环境的干净整洁，强烈建议使用虚拟环境。
+
+首先安装pip：
+$ wget https://bootstrap.pypa.io/get-pip.py
+$ sudo python get-pip.py
+$ rm get-pip.py
+
+
+    Python虚拟环境（pyvenv、virtualenv）
+
+安装virtualenv：
+$ sudo pip install virtualenv virtualenvwrapper
+
+在~/.bashrc文件中添加如下环境变量：
+export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+
+
+使环境变量生效：
+$ source ~/.bashrc
+
+创建Python虚拟环境：
+$ mkvirtualenv cv2 -p python2  # python 2       ：-p python2.7 等于 --python=python2.7
+$ mkvirtualenv cv3 -p python3  # python 3        或virtualenv -python=python3.5 cv3
+
+
+Ubuntu 16.04编译安装OpenCV（Python）
+
+切换工作目录：
+$ workon cv3   /cv2 #  
+
+or
+$cd cv3
+$source bin/activate
+ 
+
+Ubuntu 16.04编译安装OpenCV（Python）
+
+分别在cv2、cv3虚拟环境安装numpy：
+$ pip install numpy
+
+#4 编译OpenCV
+
+激活要安装的Python虚拟环境：
+$ workon cv3    #  cv2:Python2->cv2   cv3:Python3->cv3
+
+编辑OpenCV：创建编译目录，一定要在刚才创建的虚拟环境下执行：
+$ cd ~/opencv-3.2.0/
+$ mkdir build
+$ cd build
+$ cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \     
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D INSTALL_C_EXAMPLES=OFF \				#如果需要编译c++接口设定为ON
+    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.2.0/modules \
+    -D PYTHON_EXECUTABLE=~/.virtualenvs/cv[2/3]/bin/python \  # 使用cv2或cv3替换cv[2/3]
+    -D BUILD_EXAMPLES=ON ..  # 如果在编译例子时遇到错误，把它改为OFF通过
+
+
+检查：cmake后python 3项出现这一段：
+	Python 3:
+  		Interpreter:     /home/lai/cv/bin/python3.5 (ver 3.5.3)
+  		Libraries:       /usr/lib/x86_64-linux-gnu/libpython3.5m.so (ver 3.5.3+)
+  		numpy:           /home/lai/cv/lib/python3.5/site-packages/numpy/core/include (ver 1.10.4)
+ 		packages path:   lib/python3.5/site-packages
+	则说明配置正确的
+编译：
+$ make -j4
+
+安装：
+$ sudo make install
+$ sudo ldconfig
+
+#5 完成OpenCV的安装
+
+Python 2.7：
+
+OpenCV模块位于/usr/local/lib/python-2.7/site-packages/目录。
+
+Ubuntu 16.04编译安装OpenCV（Python）
+
+创建链接：
+	
+$ cd ~/.virtualenvs/cv2/lib/python2.7/site-packages/
+$ ln -s /usr/local/lib/python2.7/site-packages/cv2.so cv2.so
+
+Python 3.5：
+
+OpenCV模块位于/usr/local/lib/python3.5/site-packages/目录。
+
+为Python3编译的模块名字不是cv.so，而是cv2.cpython-35m-x86_64-linux-gnu.so，系统不同名字也不同。重命名：
+	
+$ cd /usr/local/lib/python3.5/site-packages/
+$ sudo mv cv2.cpython-35m-x86_64-linux-gnu.so cv2.so
+
+创建链接：
+$ cd ~/.virtualenvs/cv/lib/python3.5/site-packages/
+$ ln -s /usr/local/lib/python3.5/site-packages/cv2.so cv2.so
+
+测试安装：
+$ cd ~
+$ workon cv3／cv2
+$ python
+Python 3.5.2 (default, Jul  5 2016, 12:43:10) 
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import cv2
+>>> cv2.__version__
+'3.2.0'
+>>>
+
+安装完成。
+
+我在编译OpenCV时遇到的错误（BUILD_EXAMPLES=OFF）：
+[ 82%] Linking CXX executable ../../bin/cpp-example-stereo_match
+/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o: In function `_start':
+(.text+0x20): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+samples/cpp/CMakeFiles/example_stereo_match.dir/build.make:135: recipe for target 'bin/cpp-example-stereo_match' failed
+make[2]: *** [bin/cpp-example-stereo_match] Error 1
+CMakeFiles/Makefile2:20549: recipe for target 'samples/cpp/CMakeFiles/example_stereo_match.dir/all' failed
+make[1]: *** [samples/cpp/CMakeFiles/example_stereo_match.dir/all] Error 2
+Makefile:160: recipe for target 'all' failed
+make: *** [all] Error 2
+
+
+其它安装OpenCV的方法
+
+1）安装Ubuntu默认仓库中的OpenCV：
+$ sudo apt install libopencv-dev python-opencv
+1
+	
+$ sudo apt install libopencv-dev python-opencv
+
+版本旧，不支持Python3。
+
+python2推荐使用这种方法安装，最终通过这两种方法，系统和虚拟环境都安装了opencv3
+
+2）使用OpenCV安装脚本：
+$ wget https://github.com/milq/scripts-ubuntu-debian/blob/master/install-opencv.sh
+$ bash install-opencv.sh
+
+anaconda 安装opencv失败无法读取视频文件，因此推荐使用virtualenv 虚拟环境安装，然后安装必要库和spyder
+
+
+
+
+
+
+
+查看库文件：$pkg-config --libs opencv
+
+
+	-L/usr/local/lib -L/usr/local/cuda-8.0/lib64 -lopencv_calib3d -lopencv_contrib -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_gpu -lopencv_highgui -lopencv_imgproc -lopencv_legacy -lopencv_ml -lopencv_nonfree -lopencv_objdetect -lopencv_ocl -lopencv_photo -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videostab -lcufft -lnpps -lnppi -lnppc -lcudart -lrt -lpthread -lm -ldl 
+	
+	pkg-config --cflags opencv
+	
+	
+
+
+
+
+
+
+
+
+
+*************************************************************************************************
+opencv和vs 编译生成的程序如何运行在没有安装的电脑上:
+
+
+以下说明，针对于VS2012，其他VS版本，可类比（如VS2013 ，将下面的 VC11 替换成 VC12）。建议使用Everything 搜索软件，当提示缺少哪个库文件时，在开发PC上搜索找到该文件，考到新PC上。
+
+项目属性 - C/C++ - 代码生成 - 运行库 - 选择“多线程（/MT）”
+编译
+copy编译生成的exe文件，复制VS运行所需的三个库： 
+debug模式复制 \VC\redist\x86\Microsoft.VC110.DebugCRT 文件夹下的三个dll
+release模式复制 \VC\redist\x86\Microsoft.VC110.CRT 文件夹下的三个dll
+在一台没有安装VS和OpenCV的电脑上运行exe程序，按照提示缺少的库文件从开发的电脑上（opencv\build\x86\vc11\bin）逐个复制到exe程序相同的目录 
+为了省事.可以复制全部OpenCv的运行库：\build\x86\vc11\bin下的所有dll文件 
+debug 模式： *d.dll 文件
+release 模式：*.dll 文件
+最终的文件夹包含：exe程序、三个vs运行库文件、若干个所需的opencv运行库文件
+
+VS 三个运行库分别为： 
+- debug 模式 : msvcp110.dll，msvcr110.dll，vccorlib110.dll 
+- release 模式 : msvcp110d.dll，msvcr110d.dll，vccorlib110d.dll
+
+
+
+在未安装opencv电脑上运行opencv程序的设置
+本人采用opencv2.1版本的库文件
+1、程序文件夹下添加一个文件夹（可名为CV）里面包含所有常用.h文件、.cpp文件（将...\OpenCV2.1\include\opencv中的所有文件全部导入）和.lib文件。
+2、在StdAfx.h头文件中添加相应的需要用到的.h和.lib代码。
+//添加的头文件,注意<>和''的区别
+#include 'cv/cv.h'
+#include 'cv/cxcore.h'
+#include 'cv/highgui.h'
+//添加的lib文件,dll文件不需要添加,系统会自动搜索链接
+#pragma comment(lib,'cv/cxcore210.lib')
+#pragma comment(lib,'cv/cv210.lib')
+#pragma comment(lib,'cv/cvaux210.lib')
+#pragma comment(lib,'cv/highgui210.lib')
+以上添加.lib的代码相当于本文第一部分配置的时候project settings中添加.lib静态库
+3、程序文件夹下或debug文件夹下添加常用的.dll动态库。
+完毕，这样该程序便可以在任何没有安装OpenCV的机器上运行。
+另一种方式：
+在没有安装OpenCV的电脑上，要运行基于OpenCV库的程序，有两种方法：一、动态链接：就是将OpenCv安装目录下的bin目录下的*.dll文件与应用程序一起打包发布；二、静态链接：就是将OpenCV库源代码先用cMake进行编译，然后将opencv库的源文件加到工程中一期编译，也就是说最后生成的可执行文件可以单独运行，不需要OpenCV的动态链接库。
+一、首先介绍第一种方法，动态链接，dll调用其中包括隐式调用和显示调用
+1 隐式调用一般需要：
+声明函数接口的.h文件——include文件夹里的内容
+链接动态库的.lib文件——lib文件夹里的内容以及Input->Additional Dependencies添加的XX.li b
+动态链接库.dll文件——bin文件夹的内容
+这里bin文件夹是在系统环境目录里的，所以执行代码是exe文件可以找到。也可以添加在系统文件中，把需要用到的dll拷贝到exe同一个文件夹下即可。
+所以，如果把未发布的工程拷贝到没有opencv的电脑上，只要把需要用的函数相关的.h，.lib以及.dll文件考过去即可。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

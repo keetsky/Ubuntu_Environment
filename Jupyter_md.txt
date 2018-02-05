@@ -1,0 +1,79 @@
+jpyter  markdowm
+  打开jupyter
+	$jupyter notebook dd.ipynb
+  文件格式：.ipynb .md
+
+  标题：
+      # 1. 标题
+      ## 二级标题
+      ### 三级标题
+      #### 四级标题
+      ##### 五级标题
+      ###### 六级标题
+  加粗和斜体：
+      **加粗**
+      *斜体*
+  列表：用符号* + -
+	1. 第一节
+	* 第二节(你不用敲 "2"，自动就有了）
+    	    * 第一小节（推荐每层次缩进四个空格）
+                * 小小节 1
+                * 小小节 2
+            * 第二小节
+                * 小小节 1
+                * 小小节 2
+      ### 无序列表
+      * 1
+      * 2
+      * 3
+      ### 有序列表
+      1. 1
+      2. 3
+      3. 3	
+  引用：
+      > 我不喜欢逆
+  图片：
+      加载本地图片：
+	![abc](../images/08_logistic_reg_acc.png "Logistic Regression Accuracy")
+      网络图片：推荐 推荐图窗网址 https://imgchr.com/
+      ![abc](http://img.361games.com/file/tu/meinv/ylep1ek4img.jpg "Logistic Regression Accuracy")
+  链接：
+       [Baidu](http://baidu.com)
+  表格：
+	| 我的博客 | 浏览量   |  点赞量  |
+	| ----  | -----:  | :----    |
+	| 简书     | 1000 |   500     |
+	| 博客园 | 2000  |   120  |
+  代码框：
+	'import numpy as np
+	np.array([1,2,3])'
+	或
+	'''
+	dafdaf 
+	'''
+  分割线：
+	***
+  删除线：
+	~~这是一段错误的文本。~~
+  符号转义： _ # * 等，就在这些符号前加反斜杠，_符号转义_
+   
+	\_符号转义\_
+  键盘：
+  	<kbd>Ctrl+b</kbd>
+  公式：mathtype格式
+	$ \textbf{y} = sigmoid(\textbf{A}\times \textbf{x} + \textbf{b})$
+  换行、段落：
+	在行末敲入一个或以上回车（两段空一行），可将此句变成段落。
+	在行末敲入两个或以上空格再回车（行末空两格），可将此句强制换行。
+	有强制换行，需要在每行的最前面加上 > ；
+	区块引用中有多个段落，只需要在每段最前面加一个 > 
+
+
+
+
+
+
+
+
+
+

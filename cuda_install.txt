@@ -1,0 +1,51 @@
+下载CUDA8.0 :https://developer.nvidia.com/cuda-release-candidate-download 
+下载CUDNN5.1   ： 
+windows:
+   CUDA:默认
+   CUDNN:复制到cuda中相应文件夹下 includ/cudnn.h->include/    lib/* ->lib/  bin/*->bin/
+
+linux:
+  	$ chmod +x cuda_8.0.27_linux.run
+	$ sudo sh cuda_8.0.27_linux.run
+	注意：在选择Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 361.62?(y)es/(n)o/(q)uit: n  其他选择YES
+	如果安装失败可能需要安装缺少依赖库：
+	   $sudo apt-get install freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev
+	设置环境变量(最好将其写在ros环境变量前否则可能导致roscore无法运行或运行出错).bashrc中写入：
+	  export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
+	  export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64\${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+	动态链接库:
+	  $ sudo gedit /etc/profile  
+	  文件尾部填入
+	  export PATH=/usr/local/cuda-8.0/bin:$PATH
+	  export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64
+	创建链接文件：
+	  $sudo gedit /etc/ld.so.conf.d/cuda.conf  
+	  填入：
+	  /usr/local/cuda-8.0/lib64
+	$ sudo ldconfig
+	验证安装是否完成：
+	  $ nvidia-smi 
+	测试：
+	  $ cd /usr/local/cuda-8.0/samples/1_Utilities/deviceQuery 
+	  $ sudo make 
+          $ ./deviceQuery
+	CUDNN:
+	  解压之后进入目录，在命令行进行如下操作(推荐下载deb文件安装)：
+		$ sudo cp include/cudnn.h /usr/local/cuda/include/
+		$ sudo cp lib64/lib* /usr/local/cuda/lib64/
+		$ cd /usr/local/cuda/lib64/
+		$ sudo rm -rf libcudnn.so libcudnn.so.5 #删除原有动态文件
+		$ sudo ln -s libcudnn.so.5.0.5 libcudnn.so.5  #生成软衔接
+		$ sudo ln -s libcudnn.so.5 libcudnn.so      #生成软链接
+	 	$ sudo ldconfig   #更新链接库	
+	 查看已安装cudnn版本：$cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
+
+如果存在运行opencv程序发送链接cuda opencv相关错误可在程序cmakelists.txt设置：set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
+或对生成的CMakeCache.txt修改为CUDA_RUNTIME ：OFF
+
+
+
+
+Choose your CUDA architecture, example for GTX980M: (you can check it here CUDA Compute Capability : https://developer.nvidia.com/cuda-gpus)
+
+ARCH=       -gencode arch=compute_52,code=[sm_52,compute_52]

@@ -1,0 +1,2 @@
+sudo apt-get build-dep gcc  sudo apt-get install build-essential 
+sudo apt-get install kdevelop      //或kdevelop3

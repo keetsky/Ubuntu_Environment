@@ -1,0 +1,14 @@
+http://blog.csdn.net/u012750702/article/details/53968336
+
+cmaek 遇到的问题 GLUT_Xmu_LIBRARY (ADVANCED)
+
+CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
+Please set them or make sure they are set and tested correctly in the CMake files:
+GLUT_Xmu_LIBRARY (ADVANCED)
+    linked by target "cmaketest" in directory /home/hit/soft_install/NiTE-2.0.0/Samples/cmaketest
+
+
+
+
+解决：
+sudo apt-get install libxmu-dev  

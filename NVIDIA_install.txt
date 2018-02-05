@@ -1,0 +1,73 @@
+显卡驱动安装:
+  下载对应驱动：http://www.nvidia.com/Download/index.aspx?lang=en-us
+windows:
+	直接安装
+linux:
+  显卡信息查看：
+	$ lspci | grep -i nvidia             #显卡型号比如Quadro K620
+	$ sudo lshw -numeric -C display
+	$ ubuntu-drivers devices             #支持参数比如nvidia-375 nvidia-340
+  安装准备：
+	$ sudo apt-get update
+	$ sudo apt-get upgrade
+  台式机或单显卡驱动安装：
+    法1：
+	$ sudo chmod +x NVIDIA**.run 	     #修改下载的驱动包权限
+	切换到tty1模式同时按 Ctrl+Alt+F7
+	$ sudo service lightdm stop 	     #光闭图形界面支持
+	$ sudo ./NVIDIA**.run		     #安装全选yes
+	$sudo reboot
+     法2：源安装
+	$ sudo add-apt-repository ppa:graphics-drivers/ppa 	#添加源
+	$ sudo apt-get update  		     #源不好可 sudo apt-get -qy update
+	$ sudo apt-get install nvidia-375
+	$ sudo apt-get install mesa-common-dev
+	$ sudo apt-get install freeglut3-dev
+   笔记本双显卡驱动安装: GTX 1050i
+	(1) 设置BIOS:BIOS中Secure Boot设置为disable，否则安装完nvidia驱动后可能进步了桌面，正安装NVIDIA driver后，如果再将Secure Boot设置为enable,再启动ubuntu则NVIDIA driver则不会工作。 
+	(2) 禁用nouveau驱动：(Ubuntu系统集成的显卡驱动程序是nouveau，我们需要先将nouveau从Linux内核禁用掉才能安装NVIDIA官方驱动。 )
+	查看属性：
+	  $ ll  /etc/modprobe.d/blacklist.conf 
+	修改属性：
+	  $ sudo chmod 666 /etc/modprobe.d/blacklist.conf 
+	  $ sudo vi  /etc/modprobe.d/blacklist.conf
+	  文件末尾添加：
+		blacklist vga16fb
+		blacklist nouveau       #其实只需要添加这一项
+		blacklist rivafb
+		blacklist rivatv
+		blacklist nvidiafb
+	修改保存，复原文件属性：
+	  $ sudo chmod 644 /etc/modprobe.d/blacklist.conf
+	(3) 更新内核后重启电脑：
+	  $ sudo update-initramfs -u
+	  $ sudo reboot
+	(4) 确认nouveau已经被屏蔽掉(无显示)，否则后面会安装后进不了桌面：
+	  $ lsmod | grep nouveau      #无显示则表示已经屏蔽了
+	(5) 安装NVIDIA显卡驱动：
+	  $ sudo add-apt-repository ppa:graphics-drivers/ppa 
+	  $ sudo apt-get install build-essentia
+	  $ sudo apt-get update 
+	  $ sudo apt-get upgrade  
+	  查看可用驱动版本：
+		$ ubuntu-drivers devices 	#比如包含：nvidia-381
+	  安装NVIDIA driver:
+		切换到tty1模式同时按 Ctrl+Alt+F7
+		$ sudo service lightdm stop 		#关闭图形桌面管理器
+		$ sudo apt-get install nvidia-381 	#如果所有都完成后无法进入桌面可进入tty1卸载显卡驱动换一个驱动版本安装试下 
+		$ sudo reboot 
+	(6) 以上步骤尽量严格完成，否则很可能显卡安装失败或者无法进入登入界面或桌面系统
+
+   查看是否安装成功：
+	$ nvidia-smi  或 $ nvidia-settings 或 点开System Settings->Details 查看
+   卸载显卡驱动：
+	$ sh ./NVIDIA**.run -uninstall
+	or
+	$ sudo apt-get remove --purge nvidia*
+    
+问题：
+    1. 安装完显卡一段时间系统update后登入不进系统
+	重装显卡驱动
+	
+	
+		

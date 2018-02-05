@@ -1,0 +1,150 @@
+
+目标：一 eclipse 完成python c/c+ 搭建
+eclipse for python:（推荐用虚拟环境下的python）
+    下载：www.ecliose.org    选择linux-64版本
+     安装JDK：安装jdk版本为1.8以上，之后eclipse的python插件中若低于1.8，则不会显示PyDev
+	下载：http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+	      选择jdk-8u144-linux-64.tar.gz
+	安装：$sudo mkdir /usr/lib/jvm 
+	     $sudo tar zxvf jdk-8u144-linux-x64.tar.gz -C /opt/jvm
+	    查看本机上是否还有java可选:sudo update-alternatives --list java
+	    如果无，则设置环境变量
+	    $sudo gedit ~/.bashrc
+	    添加：
+		#JDK1.8
+		export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_144
+		export JRE_HOME=${JAVA_HOME}/jre  
+		export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib  
+		export PATH=${JAVA_HOME}/bin:$PATH   
+	   查看是否配置成功：$java -version
+    
+    配置eclipse:Eclipse Java EE IDE for Web Developers
+	解压下载的eclipse
+	点击启动eclipse:点击Eclipse，选择工作空间，也可选择默认
+#################################################################################################
+	选择安装插件:
+	    help->install new software ...->add->name:PyDev  ,localtion:http://pydev.org/updates（PyDev的更新地址），点击OK
+	    show only the latest versions of ..这项不要打勾，其他都打勾
+	    只选择PyDev下的PyDev for Eclipse
+	    一直点下一步
+
+     配置pydev：
+	$which python          获取python安装路径/home/keetsky/anaconda3/bin/python
+	eclipse window->preference->intercepters->PyDev->Python Interpreter
+	点击new->name:python35   location:/home/keetsky/anaconda3/bin/python（可改使用系统的或虚拟环境的）  一直OK
+     测试：
+	File->(new) project->PyDev->PyDev Project
+	project name:python_test,选择create 'src' folder and ...->finish
+	将工程导入->右击src->new->PyDev Package->source folder:/python_test/src name:test1
+	右击test1->new->PyDev modul->name:testpy   在空白处填入语句运行进行测试		  #################################		
+     创建桌面图标：
+	$cd Desktop
+	$sudo touch eclipse.desktop
+	$sudo chmod x+u elipse.desktop      #-rwxr--r-- 1      +x 
+	$sudo gedit elipse.desktop
+	填入
+		[Desktop Entry]
+		Version=default
+		Comment=Eclipse
+		Name=Eclipse
+		Exec=/home/keetsky/eclipse/eclipse
+		Terminal=false
+		Icon=/home/keetsky/eclipse/icon.xpm
+		Type=Application
+		Categories=Developer;          或=Development
+     注意：这里如果没有PyDev，原因有两个：1）jdk版本低于1.8 或者 2）之前一部选择是否信任没有勾选，请按照原始步骤操作
+         
+########################################################################
+eclipse for c/c++:http://blog.chinaunix.net/uid-26729093-id-4123431.html
+    $sudo apt-get install build-essential
+    参考上段eclipse for python 部分修改
+    help->install new software ...->name:CTD   location:http://download.eclipse.org/tools/cdt/releases/indigo
+    选择第一个CDT Main Features，一路Next就好了,重启eclipse。
+    
+
+
+	菜单栏：Help------>Install New Software------>在Work with的框框下输入以下地址回车。
+	http://download.eclipse.org/technology/babel/update-site/galileo
+	选择简体中文: Babel Language Packs in Chinese (Simplified)
+	然后就是选择简体中文安图提示一步步安装
+	3.安装CDT（c/c++插件）
+	   （1）同 2 中 在Work with的框框下输入 http://download.eclipse.org/releases/galileo
+		选择Collaboration->Mylyn Bridge: C/C++ Development，安装，重启eclipse
+	   （2）同上输入网址后选择 Programming Languages->Eclipse C/C++ Development
+	
+
+    设置编译器:
+	启动Eclipse.进入：Windows-->Preferences-->C/C++找到Environment。增加两个变量：
+	CPLUS_INCLUDE_PATH: /usr/include/c++/4.8.4(我的gcc版本)
+	C_INCLUDE_PATH: /usr/include
+	接下来新建一个c project.编写代码的时候，当敲入'.'的时候就会自动弹出可备用的代码。
+
+最新的eclipse中这种方法CDT安装后没有C/C++插件项，安装失败
+###########################################################################################
+上在eclips中加载c/c++插件失败解决：成功
+      下载eclipse ide for c/c++ developers并解压
+       将解压后eclipse中的features  plugins中的文件全部赋值到安装原来eclips中相应
+       cp -r plugins/* ~/eclipse/plugins/
+       cp -r features/* ~/eclipse/features
+        重新启动eclipse
+	设置：
+		Project->Properties->C/C++Build->Settings->Binary Parsers
+		勾选GNU Elf Parser和Elf Parser
+      配置库和依赖项：
+	c++11支持：prject->properties->C/C++ Build->setting->GCC C++ Compiler->Miscellaneous->other flags:末尾添加 -std=c++0x 或-std=c++11
+	编译器：
+	prject->properties->C/C++ Build->Tool Chain Editor->current toolchain:Linux GCC  ,current builder:Gnu Make Builder
+	库依赖： 
+	prject->properties->C/C++ Build->setting->GCC C++ Compiler ->Includes->Include paths->填入：/usr/local/include/opencv /usr/local/include /usr/include/c++/4.8.4 /usr/include 
+	prject->properties->C/C++ Build->setting->GCC C++ Linker->Library search Path:/usr/local/lib  usr/local/cuda-8.0/lib64,libraries:opencv_core opencv_video pthread等
+
+
+
+库查询（OPENCV库配置查看）：http://docs.opencv.org/2.4/doc/tutorials/introduction/linux_eclipse/linux_eclipse.html
+	pkg-config --libs opencv      #获得-lopencv_core   库相关
+	pkg-config --cflags opencv    #获得include 相关
+
+####################################################################################################
+cmake搭建Eclipse工程：
+	(将cmake工程拷贝到eclipse工作空间中，这不是必须)假定为testopencv目录下有src目录(存放cpp文件)和CmakeLists.txt文件
+	$cd testopencv
+	$mkdir build
+	$cd build
+	$cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ..        #如果需要指定CDT版本加上-DCMAKE_ECLIPSE_VERSION=4.2
+	$ll              #查看是否生成.cproject  和 .project
+    eclipse:
+	File->New->Project->C/C++->Makefile Project with Exiting code->next->
+	Project Name:testopencv    ,Existing Code Location:/home/keetsky/eclipse-workspace/testopencv
+	->Linux GCC->finish
+	设置项目属性：Project->Properties->C/C++ Build->Build location填入:${workspace_loc:/testopencv}/build
+	测试：Project->Build Project       run 
+	    如果需要输入参数：run configuration->选择可执行文件->Arguments->填入参数比如people.jpg
+	说明：配置完后程序中有显示划线部分,不用管没问题的，不需要再添加include关联，因为它是通过cmake产生的makefile寻找库关联项而不是通过eclipse
+
+
+    例子：将ros程序搭建eclipse      http://blog.sina.com.cn/s/blog_79ba23780102wcrm.html  http://wiki.ros.org/IDEs
+	$cd catkin_ws
+	$catkin_make --force-cmake -G"Eclipse CDT4 - Unix Makefiles"
+	File->New->Project->C/C++->Makefile Project with Exiting code->next->
+	Project Name:catkin_ws    ,Existing Code Location:/home/keetsky/catkin_ws
+	->Linux GCC->finish
+	设置项目属性：Project->Properties->C/C++ Build->Build location填入:${workspace_loc:/catkin_ws}/build
+	添加PYTHONPATH环境变量:Project > Properties > C/C++ Build > Environment->Add
+		->Name:PYTHONPATH  Value:/opt/ros/indigo/lib/pythoon2.7/dist-packages->OK
+	测试：Project->Build Project          run
+		
+	
+##################################################################
+也可在help->Eclipse Marketplace->search相关插件如PyDev (CDT失败)安装完后重启eclipse
+CDT也可（推荐）：下载CDT包：www.eclipse.org/cdt/downloads.php
+	解压，将解压的plugins拷贝到eclipse中：cp -r plugins/* ~/eclipse/plugins/
+					     cp -r features/* ~/eclipse/features/
+	
+
+
+	
+
+
+
+
+

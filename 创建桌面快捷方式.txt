@@ -1,0 +1,15 @@
+     比如创建eclipse桌面图标：
+	$cd Desktop
+	$sudo touch eclipse.desktop
+	$sudo chmod x+u elipse.desktop      #-rwxr--r-- 1      +x 
+	$sudo gedit elipse.desktop
+	填入
+		[Desktop Entry]
+		Version=default
+		Comment=Eclipse
+		Name=Eclipse
+		Exec=/home/keetsky/eclipse/eclipse   ###Exec=\sgnome-terminal -x  /home/keetsky/Desktop/testopencv/testopencv.sh
+		Terminal=false
+		Icon=/home/keetsky/eclipse/icon.xpm
+		Type=Application
+		Categories=Developer;          或=Development

@@ -1,0 +1,21 @@
+
+https://pip.pypa.io/en/latest/installing/
+
+Installation:
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+
+    pip --version
+upgrading:
+    linux/macOS: pip install -U pip
+    windows:python -m pip install -U  pip
+Installing Packages:
+    pip install numpy     #or the specific version numpy==1.3.3
+    pip install xxxxxx.whl   #install from wheel 
+Uninstalling Packages:
+    pip uninstall numpy
+listing Packages:
+    pip list     #list installed packages
+    pip list --outdated #list outdated and show latest version 
+    pip show numpy    #show details 
+	

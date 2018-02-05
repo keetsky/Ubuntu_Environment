@@ -1,0 +1,466 @@
+教程及其安装：https://hexo.io/zh-cn/docs/index.html     http://www.jianshu.com/p/c9295bacd98b
+http://ookamiantd.top/2017/build-blog-hexo-advanced/#定位元素
+next主题配置教程：http://theme-next.iissnan.com/   https://www.cnblogs.com/syd192/p/6074323.html
+      http://ookamiantd.top/2017/build-blog-hexo-advanced/#定位元素
+软件安装：
+    Nodejs安装：
+	法1:http://www.cnblogs.com/dubaokun/p/3558848.html
+	   下载：http://nodejs.cn/download/  https://nodejs.org/en/download/
+		推荐：wget https://nodejs.org/dist/v4.4.4/node-v4.4.4-linux-x64.tar.xz
+	   cd node-v4.4.4-linux-x64/bin
+	   ls
+           ./node -v
+	    链接： ln -s /home/keetsky/node-v4.4.4-linux-x64/bin/node /usr/local/bin/node  
+	    	   ln -s /home/keetsky/node-v4.4.4-linux-x64/bin/npm /usr/local/bin/npm
+            pwd   可以看到path
+            sudo vi /etc/profile
+	    PATH=$PATH=$PATH:/home/keetsky/node-v4.4.4-linux-x64/bin
+	    source /etc/profile
+            echo $PATH
+	    然后到任意目录下去执行一次执行node -v   npm -v 
+         法2：
+		wget https://nodejs.org/dist/v4.4.4/node-v4.4.4-linux-x64.tar.xz
+		xz -d node-v4.4.4-linux-x64.tar.xz tar -xvf node-v4.4.4-linux-x64.tar
+		mv node-v4.4.4-linux-x64 node-v4.4.4
+		mv node-v4.4.4 /usr/local/node
+		vim /etc/profile
+		export PATH=$PATH:/usr/local/node/bin
+		source /etc/profile
+         检查是否安装成功：node --version   
+			  npm -version
+			  hexo --version
+         or 推荐
+	    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+	    sudo apt-get install -y nodejs
+	    sudo apt-get install npm
+       
+    git安装：sudo apt-get install git-core       
+		https://github.com/waylau/git-for-win
+    hexo安装:npm install hexo-cli hexo-server -g  或 sudo npm install hexo -g    或  sudo npm install --unsafe-perm --verbose -g hexo 
+	如果网络慢：
+		npm install -g cnpm --registry=https://registry.npm.taobao.orgc
+		cnpm install hexo-cli -g
+    错误： [Error: Cannot find module 则 npm install hexo --no-optional
+    测试：hexo --help
+	出现/usr/bin/env:node:没有那个文件或目录
+        只需要修改以下hexo所在路径的文件即可,我的位置是:/usr/local/lib/node_modules/hexo-cli/bin/
+	sudo vim hexo
+	把#!/usr/bin/env node修改为!/usr/bin/env nodejs即可
+
+搭建：
+    mkdir blog
+    cd blog
+    hexo init      
+    #hexo init blog
+    如果hexo未找到命令则：可以在nodejs的 lib/node_modules/hexo-cli/bin 目录下找到 hexo ，同上进行ln
+    npm install
+    hexo s
+    打开浏览器输入：localhost:4000    则可看到博客
+   
+
+选择主题：
+    将主题下载到theme文件夹比如hexo-theme-yilia->blog目录的_config.yml中然后找到 theme关键字，
+    将后边的主题换成 hexo-theme-yilia 即可
+设置下界面：blog下_config.yml
+	 title: dimsky 的 9 维空间    //你博客的名字
+ 	 author: dimsky  //你的名字
+ 	 language: zh-Hans    //语言中文    zh-CN
+ 	 theme:  hexo-theme-yilia   //刚刚安装的主题名称
+
+主题推荐：https://www.zhihu.com/question/24422335
+	https://github.com/monniya/hexo-theme-new-vno
+	https://github.com/iissnan/hexo-theme-next
+所有主题:https://hexo.io/themes/
+
+一个写好的主题：git clone git@github.com:chen-shang/Hexo-Theme-TaiJi.git
+	       git clone https://github.com/wingjay/wingjay.github.io    （http://www.jianshu.com/p/99665608d295）
+	       https://github.com/Molunerfinn/hexo-theme-melody
+
+问题：
+    1. hexo init 失败者 或无法git clone  [](https://github.com/atom/atom/issues/2268#issuecomment-45162726) 
+	查看下  $env | grep -i proxy
+		NO_PROXY=localhost,127.0.0.0/8,::1
+		https_proxy=http://127.0.0.1:37152/
+		HTTPS_PROXY=http://127.0.0.1:37152/
+		no_proxy=localhost,127.0.0.0/8,::1
+	打开/home/keetsky/.gitconfig 文件，win7在C:\Users\tom目录下，添加如下
+		[http]
+        		proxy = ""
+        也可：$npm config set https-proxy ""
+	    或$npm config set strict-ssl false
+	最终我的.gitconfig为
+		[user]
+			name = keetsky
+			email = keetsky@163.com
+		[color]
+			ui = true
+
+		[http]
+			proxy = ""
+
+		[credential]
+			helper = store
+         法2:重设HTTPS_PROXY HTTP_PROXY
+		npm config set proxy http://proxy.company.com:8080
+		npm config set https-proxy http://proxy.company.com:8080  或 $npm config set https-proxy ""
+             查看下：npm config get https-proxy
+	     查看所有配置：npm config ls -l
+    2. ERROR Script load failed: themes/next/scripts/tags/exturl.js
+	$npm install hexo-util --save      #npm install -- save-dev hexo-util
+    3.npm install时，出现npm error: RPC failed错误:
+	将npm镜像修改为淘宝镜像
+		1.通过config命令
+		npm config set registry https://registry.npm.taobao.org 
+		npm info underscore （如果上面配置正确这个命令会有字符串response）
+		2.命令行指定
+		npm --registry https://registry.npm.taobao.org info underscore 
+		3.编辑 ~/.npmrc 加入下面内容
+		registry = https://registry.npm.taobao.org
+    4. Deployer not found: git
+	$npm install hexo-deployer-git --save
+    5. 使用hexo 生成feed链接需要安装 npm install hexo-generator-feed --save
+    6. npm install 出错
+        sudo试下,不行再去github搜这个插件比如hexo-generator-feed再按说明安装
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>	
+写博客：
+├── .deploy        #需要部署的文件
+
+├── node_modules    #Hexo插件
+
+├── public          #生成的静态网页文件
+
+├── scaffolds      #模板
+
+├── source          #博客正文和其他源文件，404、favicon、CNAME 都应该放在这里
+
+| ├── _drafts      #草稿
+
+| └── _posts        #文章
+
+├── themes          #主题
+
+├── _config.yml    #全局配置文件
+
+└── package.json    #npm 依赖等
+
+
+
+
+
+   新建一篇博客： hexo new  "hello babby"     (博客标题为hello babby)
+		 #hexo new post "test"   将基于scaffolds\post.md模式生成 test.md
+                 在 source/_posts 文件夹下生成了hello babby.md 
+		 也可直接新建md文件
+                ---
+		title: hello babby
+		date: 2017-11-08 16:47:07 #尽量把时间删除，不知道为什么加了后出错
+		tags: 
+		- 标签1
+                - 标签2
+		categories: #这是分类
+		- 人        #父类
+		- 男人	    #子类
+		---
+
+1. 标签 
+    添加标签：
+        设定标签关联
+	$hexo new page tags       
+	确认站点配置文件里有tag_dir: tags
+	确认主题配置文件里有tags: /tags
+	编辑站点的source/tags/index.md，添加:
+		title: tags
+		type: "tags"
+		comments: false
+        写文章创建标签
+	$hexo new "test"   
+	进入test.md编辑：
+		title: test
+		tags: 
+		- 标签1
+                - 标签2		
+2. 添加分类	        
+    添加分类：
+        设定分类关联
+	$hexo new page categories       
+	确认站点配置文件里有category_dir: categories
+	确认主题配置文件里有categories: /categories
+	编辑站点的source/categories/index.md，添加：
+	title: categories
+	type: "categories"
+	comments: false
+        写文章创建标签
+	$hexo new "test"   
+	进入test.md编辑：
+		title: test
+		categories: 
+		- 父类
+                - 子类	
+3. 图片支持
+	_config.yml 中设 post_asset_folder:true
+	$npm install hexo-asset-image --save     或 npm install https://github.com/CodeFalling/hexo-asset-image --save
+        对于本地图片必须放在test文件夹下,文件夹与文章名test相同：
+		test
+		├── apppicker.jpg
+		├── logo.jpg
+		└── rules.jpg
+		test.md
+        再test.md只能这种格式这样写 ![hehe](rules.jpg "图摘")  不要加/
+	对于网络图片无要求，推荐图窗网址 https://imgchr.com/
+		![BOgeg](https://s1.ax1x.com/2017/11/09/BOgeg.jpg "good")
+4. 插入音乐
+    进入网易云音乐选中一首歌如：http://music.163.com/#/song?id=516657051
+    点击生成外链播放器
+    复制HTML代码到md文件：
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=298 height=52 src="http://music.163.com/outchain/player?type=2&id=32192436&auto=1&height=32"></iframe>
+    其中的width=298 height=52 均改为0就看不到了，依然可以播放音乐
+5. latex公式支持
+	_config.yml设置：
+		mathjax:
+		  enable: true
+		  per_page: false
+
+
+10. 文本编辑   http://write.blog.csdn.net/mdeditor
+
+
+
+
+
+    重新生成博客:cd 到blog
+                hexo g
+    开服务器查看有没生成成功：hexo s
+
+           
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+博客部署到github:
+	1.创建SSH Key。在用户主目录下，看看有没有.ssh目录，目录下有没有私钥id_rsa和公钥id_rsa.pub这两个文件,无则,windows: C:/Users/用户名/.ssh/
+	    $ssh-keygen -t rsa -C "keetsky@163.com"      #github上邮箱
+	   一路回车，使用默认值即可
+	2. 登录github->Account settings->SSH Keys->Add SSH Key->填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容->Add Key
+	"Create a new repo”按钮，创建一个新的learngit仓库,把本地仓库的内容推送到GitHub仓库
+	   $ssh -T git@github.com   查看有没成功
+	      Hi keetsky! You've successfully authenticated, but GitHub does not provide shell access.
+	   配置：	
+	      $git config --global user.name "keetsky" 	#github的名字	
+	      $git config --global user.email "keetsky@163.com" #GitHub的邮箱
+	3.github创建假定项目为:keetsky.github.io
+	4.打开blog下的_config.yml ，冒号后面要有一个空格
+		deploy:
+		  type: git
+		  repository: https://github.com/keetsky/keetsky.github.io.git #git@github.com:keetsky/keetsky.github.io.git
+		  branch: master
+        执行：
+		hexo clean    #hexo c 删除旧的public文件
+		hexo g        #hexo generate 生成新的public		
+		
+	      	hexo d	      #hexo deploy -g 部署到github,将会把public文件夹push到github
+	检验：浏览器输入keetsky.github.io
+	如果上面操作失败需要安装一扩展：npm install hexo-deployer-git --save
+	如果在执行hexo d后,出现error deployer not found:github：
+		因为没有设置好 public key 所致
+        在执行hexo deploy前把在本地写好的README.md文件复制到deploy文件夹中，再去执行hexo deploy。
+
+
+
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+更新升级提示（可以最后看）
+
+更新升级会有不确定因素，即讨厌又麻烦，但是不更新升级怎么能享受新功能呢。
+
+1.npm升级全局安装的模块：
+
+npm update -g
+2.npm升级博客目录下安装的模块，在博客文件夹根目录：
+
+npm update
+3.升级npm自身：
+
+npm install npm -g
+4.升级Node.js到最新版：
+
+npm install -g n
+n latest
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+主题美化：具体请查看上一目录的  “hexo博客”  文件夹
+
+
+
+	http://www.jianshu.com/p/f054333ac9e6
+1. 网站标题栏背景颜色
+    next/source/css/_custom/custom.styl 添加：
+	.site-meta {
+	  background: $blue; //修改为自己喜欢的颜色
+	}
+2.修改内容区域宽度
+     custom.styl添加：
+	// 修改成你期望的宽度
+	$content-desktop = 700px
+	// 当视窗超过 1600px 后的宽度
+	$content-desktop-large = 900px
+
+3. 主页显示文章摘要
+    默认情况下在主页是把文章内容全部显示出来的，对此我们可在文章中配置description也是可以的
+	---
+	title: Hexo+GitHub搭建个人博客
+	categories: Hexo
+	comments: true     #评论是否显示
+	keywords: Hexo, Blog, GitHub
+	tags: [Hexo, Blog, GitHub]
+	description: 使用Hexo在GitHub上搭建个人博客
+	date: 2017-01-010 13:00:00
+	---
+    法2: 设置首页不显示全文
+	_config.yml设置auto_excerpt，只显示150个字体,会增加"阅读全文"按键：
+		auto_excerpt:
+		enable: true
+		length: 150
+        不过好像速度变慢了
+     法3：推荐
+        在文章中使用<!-- more -->  其之前的为摘要
+4. 加入网站缩略图标
+    在themes/next/的_config.yml中配置：
+        favicon: /images/favicon.ico
+
+
+5. 添加disqus评论  教程http://www.jianshu.com/p/d68de067ea74?open_source=weibo_search
+     注册Disqus网址：https://disqus.com/
+     配置：登录后，点击首页的GET STARTED 按钮，选择i want to install Disques on my site
+	Website Name 是 主题配置文件(_config.yml)的short name 。比如我的是 NaNsay  
+	Category 选择种类，比如我选的是 Tech
+	create sute->Universal Code->configure
+	Website URL 填写博客地址如 https://keetsky.github.io/
+	Website Name：NaNsay
+     主题配置文件(_config.yml)：
+	disqus:
+	  enable: true
+	  shortname: NaNsay    #your name
+	  count: true
+6. 添加google，baidu搜索博文（未完成） http://www.jianshu.com/p/24c49f1cda94
+     1.google: https://www.google.com/webmasters/tools/home?hl=zh-CN
+     2. baidu: http://ziyuan.baidu.com/site/index
+       
+7. Hexo托管到Github和Coding   http://www.jianshu.com/p/bfba2b7120fe
+   (1)托管到github（见后段）
+   (2)托管到coding: https://coding.net/
+8.域名购买使用（未完成） http://www.jianshu.com/p/7561374ed312       
+   https://wanwang.aliyun.com/
+9. 字体大小更改
+	在themes\next\source\css\_variables\custom.styl文件里面添加：
+	$font-size-base           = 16px
+	$code-font-size           = 14px
+  一般在base.styl修改相关项
+10. 增加留言块
+    主题_config.yml menu中加：  
+	  guestbook: /guestbook
+    /languages/zh-Hans.yml menu添加：
+	guestbook: 留言
+    新建一个guesbook页面：
+	hexo new page "guestbook"
+    进入其页面修改index.md，使用中文名：
+	title: 留言
+
+11. Swiftype站内搜索（未完成）http://www.arao.me/  http://www.jeyzhang.com/next-theme-personal-settings.html
+
+12. title优化
+	更改index.swig文件，文件路径是your-hexo-site\themes\next\layout，将下面代码
+	{% block title %} {{ config.title }} {% endblock %}
+	改成
+	{% block title %} {{ config.title }} - {{ theme.description }} {% endblock %}
+	这时候你的首页标题会更符合网站名称 - 网站描述这习惯。
+	进阶，做了seo优化，把关键词也显示在Title标题里，可改成
+	{% block title %} {{ theme.keywords }} - {{ config.title }} - {{ theme.description }} {% endblock %}
+	注意：别堆砌关键字，整个标题一般不超过80个字符，可以通过chinaz的seo综合查询检查。
+
+
+
+
+13 设置首页文章显示篇数
+	Step 1: 安装相关插件
+	输入如下命令
+	npm install --save hexo-generator-index
+	npm install --save hexo-generator-archive
+	npm install --save hexo-generator-tag
+	Step 2:
+	安装完插件后，在站点配置文件中，添加如下内容
+	index_generator:
+	  per_page: 5
+	archive_generator:
+	  per_page: 20
+	  yearly: true
+	  monthly: true
+	tag_generator:
+	  per_page: 10
+	其中per_page字段是你希望设定的显示篇数。index, archive及tag开头分表代表主页，归档页面和标签页面。
+14 百度分享
+    主题配置文件中修改	
+	baidushare:
+	  type: button
+
+15.修改文章底部的那个带#号的标签
+    修改模板/themes/next/layout/_macro/post.swig，搜索 rel="tag">#，将 # 换成<i class="fa fa-tag"></i>
+
+
+16.侧边栏社交小图标设置
+   打开主题配置文件（_config.yml），再网址http://fontawesome.io/icons/获得图标名比如search, 这样添加|| search
+     menu:	  
+	search: /search  || search
+
+   或
+	social_icons:
+	  enable: true
+	  GitHub: github
+	  search: search 
+
+17. 在网站底部加上访问量
+    打开\themes\next\layout_partials\footer.swig文件<div class="copyright">前加入
+	<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    然后再合适的位置添加显示统计的代码：
+	<div class="powered-by">
+	<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+	  本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	</div>
+
+18. 关闭新建页面的评论功能？
+       
+19. 动态背景
+   在主题配置文件中，靠后面，改canvas_nest: true
+   修改颜色和数量，修改文件：/source/lib/canvas-nest/canvas-nest.min.js
+        color: 线条颜色, 默认: '0,0,0' ；三个数字分别为(R,G,B)，注意用,分割
+	opacity: 线条透明度（0~1）, 默认: 0.5
+	count: 线条的总数量, 默认: 150
+	zIndex: 背景的z-index属性，css属性用于控制所在层的位置, 默认: -1	
+
+20 优化网页布局
+   发现页面有大量留白？颜色不合自己口味，那就F12开始吧，大换装开始！背景？颜色？圆角矩形？透明度？空白区？只用按下F12，改到自己想要的样式，然后Copy到custom.styl文件即可。
+   文件位置：~/blog/themes/next/source/css/_custom/custom.styl
+
+
+
+
+
+
+
+100： 页面结构颜色等优化
+     打开themes/next/source/css/_custom/custom.styl
+     $hexo s
+     打开网页：http://localhost:4000
+     按F12 ，对相关部分修改，改一个拷贝到custom.styl中
+     如下：
+
+.main-inner {
+    margin: 0 auto;
+    width: 900px;
+}
+    然后再新开个http://localhost:4000  按Ctr+r 刷新查看效果是否改变。
+    一步一步来美化页面
+
+
+

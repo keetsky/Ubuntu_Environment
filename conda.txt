@@ -1,0 +1,67 @@
+ananconda install:
+   清华源下载速度快：https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/
+   安装：
+	$ chmode +x  ****.sh
+	$ ./***.sh
+
+
+linux:安装完ananconda后
+   环境管理：
+	安装完检查 .bashrc 是否包含 export PATH="~/anaconda3/bin:$PATH"
+	$which conda       		#conda 安装路径
+	$conda --version		#conda 版本
+	$python --version 		#python 版本
+	$conda update anaconda		#更新anaconda,小心某些包依赖以python特定版本，比如tensorflow
+	$conda update python
+	$conda update conda 		#更新conda
+	
+	$conda create --name python34 python=3.4  #创建一个名为python34的环境指定python版本未3.4，会被放在～/anaconda3/envs下
+	$source activate python34		  #激活这个环境，对于windows：activate python34
+	$source deactivate python34		  #解除这个环境，切回默认root环境
+	$conda remove --name python34 --all 	  #删除这个环境
+	$conda info -e 				  #查看已安装的环境有哪些
+	$conda install anaconda                   #当前环境下安装ananconda包集合
+	$conda create -n python34 python=3.4 anaconda #一句话包含
+	默认激活的是root版本，如果需要开机指定版本将export PATH="~/anaconda3/bin:$PATH"替换为export PATH="~/anaconda/envs/python34/bin:$PATH"   或不替换，需再增加一句 source activate python34
+	如果需要切换回linux系统自带版本，需要注销#export PATH="~/anaconda3/bin:$PATH"
+    包管理：
+	$conda install scipy 			  #比如安装包scipy
+	$conda install -n python34 scipy  	  #在指定环境中安装包scipy
+	or	
+	$pip install scipy
+	$conda list 				  #查看已安装的包packages,它是可以从site-packages文件夹中搜索已经或需要安装的包
+	$conda list -n python34			  #查看这个环境下已安装包
+	$conda search numpy			  #查看包numpy信息
+	$conda update numpy 			  #更新包nummpy
+	$conda remove -n python34 numpy 	  #指定环境中删除包numpy
+	$pip install opencvda***dfd.whl		  #安装已下载的包或.whl文件比如tensorflow opencv 等，一般比如输入：pip install --ignore-installed --upgrade tensorflow_gpu_****.whl
+    安装ananconda上传的源包：
+	$anaconda search -t conda tensorflow      #搜索有哪些tensorflow安装包比如有jjhelmus/tensorflow
+	$anaconda show jjhelmus/tensorflow        #查看这个包的详细信息
+	$conda install --channel https://conda.anaconda.org/jjhelmus tensorflow  #安装这个包
+	
+    设置国内镜像：
+	$conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+	$conda config --set show_channel_urls yes
+	#执行后会生成～/.condarc  (linux中) ，C:\Users\USER_NAME\.condarc (windows中)
+	不设置国内镜像的话可使用VPN代理来加速下载速度
+    编译环境运行：
+	$spyder 				#终端输入spyder
+    	
+
+改变默认环境：
+
+	.bashrc 中的改为
+	# set python3 as default
+	export PATH="~/anaconda/envs/python3/bin:$PATH"	
+
+ROS:
+	如果安装了anaconda将与ros冲突需要.bashrc中注销
+	#export PATH="/home/"user"/"anaconda version"/bin:$PATH"
+	
+windows:
+    下载anaconda2 安装完后 假定安装在D:\Anaconda2
+	 下载anaconda3点击安装，选择安装在D:\Anaconda2\envs/python3
+	  在advanced optins 下都不要打钩。
+	  激活python3：activate python3
+	 

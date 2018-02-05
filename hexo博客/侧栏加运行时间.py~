@@ -1,0 +1,2 @@
+
+首先在文件~/blog/themes/next/layout/_custom/sidebar.swig中加入下面代码，Date的值改为你自己的：

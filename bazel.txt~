@@ -1,0 +1,22 @@
+1. 安装
+    $sudo add-apt-repository ppa:webupd8team/java
+    $sudo apt-get update && sudo apt-get install oracle-java8-installer
+    $sudo apt-get install openjdk-8-jdk
+　　　　$echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+    $curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+    $sudo apt-get update 
+    $sudo apt-get install curl
+    $sudo apt-get install bazel
+    $sudo apt-get upgrade bazel
+
+  #or
+    $sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python
+    下载对应版本：https://github.com/bazelbuild/bazel/releases
+　　　　$chmod +x bazel-0.5.2-installer-linux-x86_64.sh
+    #If you ran the installer with --user, this will be $HOME/.bazel/bin. If you ran the installer as root, this will be /usr/local/bazel/bin.
+    $./bazel-0.5.2-installer-linux-x86_64.sh --user 
+    $gedit ~./bashrc
+    添加：export PATH="$PATH:$HOME/bin" 
+    
+
+

@@ -1,0 +1,10 @@
+软件下载：https://github.com/getlantern/lantern
+windows:
+	Windows XP SP 3 and above中下载exe安装
+linux:
+   安装：	
+	下载对应deb文件
+	$ sudo dpkg -i lantern-installer-beta-64-bit.deb
+    卸载：
+	$ sudo apt-get autoremove --purge lantern
+	搜索中输入lantern，点开			 

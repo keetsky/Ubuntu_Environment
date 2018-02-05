@@ -1,0 +1,35 @@
+新建自定义样式
+找到样式文件夹css 新建_my文件夹，在其中新建mycss.styl文件，之后就可以按照stylus的格式自定义样式了。
+
+例如：我想在文章中添加个自定义样式的按钮，怎么做呢？？？
+
+打开新建的mycss.styl文件，在其中添加样式：
+
+.myButton {
+    background-color:#0f94bd;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border-radius:15px;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:17px;
+    padding:11px 27px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #2f6627;
+}
+.myButton:hover {
+    background-color:#5cbf2a;
+}
+.myButton:active {
+    position:relative;
+    top:1px;
+}
+
+
+
+
+引用：在想要引用的时候在post.styl添加
+
+<a href="#" class="myButton">MyButton</a>

@@ -1,0 +1,24 @@
+www.nltk.org
+安装：
+    $pip install nltk
+    $python
+    $import nltk
+    $nltk.download()
+测试：
+    frome nltk.corpus import brown 
+    brown.words()
+    #['The', 'Fulton', 'County', 'Grand', 'Jury', 'said', ...]      
+    
+
+
+
+
+功能：
+  1. 
+    nltk.word_tokenize("I'm super man")
+    #['I', "'m", 'super', 'man']
+  2. 词行还原，即把一个任何形式的英语单词还原到一般形式
+    from nltk.stem import WordNetLemmatizer
+    wnl = WordNetLemmatizer()
+    print(wnl.lemmatize('dogs'))
+    #dog

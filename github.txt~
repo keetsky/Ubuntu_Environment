@@ -1,0 +1,201 @@
+
+教程：https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000
+练习（可网页操作）：https://git-scm.com/ 
+配置：
+	$git config --global user.name "keetsky" 	#github的名字	
+	$git config --global user.email "keetsky@163.com" #GitHub的邮箱
+	#执行了上面的命令后,会在家目录(/home/shiyanlou)下建立一个叫.gitconfig 的文件（该文件为隐藏文件，需要使用ls -al查看到）
+	[user]
+		name = keetsky
+		email = keetsky@163.com
+工作流程：
+    1. 创建或修改文件
+    2. 使用git add命令添加新创建或修改的文件到本地的缓存区
+    3. 使用git commit命令提交到本地代码库
+    4.（可选，有的时候并没有可以同步的远端代码库）使用git push命令将本地代码库同步到远端代码库
+Git仓库处理：
+    1.clone仓库：$ git clone https://github.com/shiyanlou/gitproject
+    2.初始化一个新仓库：
+	$cd ~/Desktop/
+	$mkdir -r github/project
+	$cd github/project
+	$git init      #初始化，创建了.git目录表示库创建了
+    3.操作库：
+	$touch file1 file2 file3     #创建3个文件,随便写点东西进去echo "test" >>file1
+	$git status      #将显示三个文件名且处于untracked状态
+	$git add file* #添加到本地缓冲区, git add * ,git add --all ,git add .
+	$git status    #显示changs to be committed: new file:file1 file2 file3
+	$git diff --cached    #查看修改，如果不加--cached将显示当前做了的修改但没有加入到索引（缓冲）里的修改，即比如现在修改了file3，$git diff 将显示出file3修改了,说明我们需要重新git add file3
+	$git diff file2	    $查看file2修改了什么
+        $git rm  file4   #将彻底删除file4文件
+        $git commit -m "add 3 files"  #提交本地仓库，-m添加本次修改的注释，-a -m 将所有没有加到缓存区的修改也一起提交，但-a命令不会添加新建的文件
+	$git status                   #提交后将显示noting to commit,缓冲区无数据
+        $git remote add origin https://github.com/keetsky/gitlearn.git   #连接远程git服务器，即连接到已经创建的repository:gitlearn中
+	$git push origin master       #如果本地的仓库连接到了远程Git服务器,本地仓库同步到远端服务器需要输入名字和密码，3个文件将上传到gitlearn中
+         
+
+
+########################################################################################
+分支与合并：
+        Git的分支可以让你在主线（master分支）之外进行代码提交，同时又不会影响代码库主线
+    分支：
+	$git branch experimental    #创建了experimental的分支
+	$git branch          	    #查看分支列表 experimental    *master,星号表示当前工作在主分支下
+	$git checkout experimental  #切换到experimental工作分支，git branch 查看是否       
+	$echo "update" >> file1     #修改文件file1
+	$git status                 #提示modified:   file1
+	$git add file1
+	$git commit -m "update file1" 
+	$cat file1		    #打开file1可以看到文件中内容：test update
+	$git push origin experimental  #将分支experimental上传到git服务器
+    分支差别：
+	$git diff master experimental   #查看两分支差别
+	$git checkout master
+	$git diff experimental		#查看两分支差别
+	$git diff experimental file2    #查看与分支exprimental 的file2差别
+    合并：
+	同样把主分支内容修改下
+	$git checkout master
+	$cat file1		    #切换到主分支看到file1内容：test; upodate不见了	
+	$echo "update again" >> file2
+	$git add file2
+	$git commit -m "update file2 on master" 
+	$git checkout master
+	$git merge  -m 'merge experimental branch' experimental   #将experimental分支合并到master中;如果两个分支都修改了同一个文件如file3，合并将发生冲突，必须手动解决冲突后再提交，打开file3,Git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容，我们修改后保存
+	$git add file3
+	$git commit -m "conflict fixed"
+	$git log --graph --pretty=oneline --abbrev-commit   #查看分支合并情况 
+     删除分支：
+	$git branch -d exprimental    #只能删除那些已经被当前分支的合并的分支;如果你要强制删除某个分支的话就用git branch –D
+     撤销合并：
+	$git reset --hard HEAD^
+
+     BUG分支：
+	$git stash        #当前分支dev当前工作现场“储藏”起来，等以后恢复现场后继续工作
+	$git checkout master   #假定需要在master分支上修复，就从master创建临时分支
+	$git checkout -b issue-101 #等于git branch issuse-101      git checkout issuse-101
+	修复BUG,假定为修改了readme.txt
+	$git add readme.txt
+	$git commit -m "fix bug 101"
+	修复完成后，切换到master分支，并完成合并，最后删除issue-101分支：
+	$git checkout master
+	$git merge -m "merged bug fix 101" issue-101
+	$ git branch -d issue-101
+	恢复现场
+	$git checkout dev
+	$git stash list
+	$git stash apply  #恢复指定git stash apply stash@{0}
+	$git stash drop   #删除stash
+	
+
+###################################################################
+分布式工作：
+    1. 分布式工作流程
+	目前的项目在/home/shiyanlou/gitproject目录，另一个用户也想与你协作开发，何让他提交代码到你的git仓库呢
+	该用户需要从git仓库进行克隆：
+	$git clone /home/shiyanlou/gitproject myrepo
+	$cd cd /tmp/myrepo
+	做了一些修改并且提交commit,合并到gitproject中
+	$cd cd /home/shiyanlou/gitproject
+	$git pull /tmp/myrepo master  #这就把myrepo的主分支合并到了gitproject的当前分支里了
+	
+	如果是远程操作分支的话
+	$ git remote add myrepo /tmp/myrepo #它从远程分支(remote branch)抓取修改git fetch的内容，然后把它合并git merge进当前的分支
+
+	$git pull  #将github的同步到本地合并更新
+
+	$git push ssh://yourserver.com/~you/proj.git master #推送本地的修改到远程Git仓库
+	
+
+
+
+#########################################################################################
+
+日志：
+    1. 查看日志，按时间先后排序
+	$git log        #显示所有的提交(commit),回车会逐步显示，输入q可以退出
+	$git log file1  #显示file1的日志
+	$git log --stat  #显示在每个提交(commit)中哪些文件被修改了, 这些文件分别添加或删除了多少行内容
+
+	$git log --pretty=oneline  #格式化日志，显示容易且好看些，或格式$git log --pretty=short
+	$git log --graph --pretty=oneline    #可视化提交图，推荐使用
+        $git log --pretty=format:'%h : %s' --topo-order --graph   #日志排序
+    2. 版本回退
+	$git reset --hard HEAD^ #退回上一版本（倒数第二个版本），HEAD^^ 上上个版本
+	$git reset --hard 8c315325  #退回到 8c315325版本
+	恢复到新版本(后悔退回了以前版本)
+	$git reflog    #查看记录你的每一次命令，定位到上次退回版本命令的下一位id：3b8bb7a
+	$git reset --hard 3b8bb7a   
+	
+    3. 标签，方便版本退回
+	$git log 
+	$git tag  stable-1 8c315325 #commit: 8c315325...（最少前面八位） 添加加个标志位'stable-1'
+	$git tag          #显示有哪些标志位，stable-1
+	$git show stable-1  #可根据显示的信息进行下一步版本退回
+	$git tag -a stable-2 3b8bb7a -m "stable 2"  #添加个标签并加注释
+	$git tag -d stable-1     #删除标签stable-1
+	$git push origin stable-1 #把标签推送到远程github
+	$git push origin --tags   #推送全部标签
+	删除远程标签
+	$git tag -d stable-1
+	$git push origin :refs/tags/stable-1
+    4. 撤销修改
+	$git checkout -- readme.txt  #让这个文件回到最近一次git commit或git add时的状态
+	$git reset HEAD readme.txt   #把暂存区的修改撤销掉（unstage），重新放回工作区
+	
+
+##################################################################################
+忽略某些文件：
+	再git add . 或git commit -a 时忽略某些文件，需要在顶层工作目录中添加.gitignore 文件来告诉Git系统要忽略掉哪些文件
+	foo.txt       #忽略所有文件名是foo.txt的文件
+	*.html	      #忽略html文件
+	!foo.html     #不忽略foo.html
+	*.[oa]	      #忽略.o .a文件
+
+     此时
+	$git add abc.html    #将添加不了
+	$git add -f abc.html  #可强制添加到git
+	$git check-ignore -v abc.html  #查看哪
+#############################################################
+远程仓库：
+    1. 添加远程仓库
+	1. 创建SSH Key。在用户主目录下，看看有没有.ssh目录，目录下有没有私钥id_rsa和公钥id_rsa.pub这两个文件,无则
+	    $ssh-keygen -t rsa -C "keetsky@163.com"      #github上邮箱
+	   一路回车，使用默认值即可
+	 2. 登录github->Account settings->SSH Keys->Add SSH Key->填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容->Add Key
+	"Create a new repo”按钮，创建一个新的learngit仓库,把本地仓库的内容推送到GitHub仓库
+	$ git remote add origin git@github.com:keetsky/learngit.git #关联一个远程库，也可使用网址https://github.com/keetsky/learngit.git
+	$git push -u origin master	#把当前分支master推送到远程
+    2. 克隆一个远程库
+	$git clone git@github.com:keetsky/learngit.git   #使用SSH比使用https快
+############################################################
+管理项目：
+	git add --all					#or git add .
+	git commit -m "dfdfad"
+	
+
+
+具体
+
+	$mkdir git_trainning   				#创建一个文件夹并进入
+	$cd git_trainning 
+	$git init  					#初始化版本库
+or github中新建好项目
+	$git clone https://github.com/keetsky/git_trainning.git 
+	$cd git_trainning
+	
+	把文件添加到版本库
+	$vim first_git_file.txt      			 #随便写点什么进去，这个文件必须在文件夹下	
+	$vim nn.txt
+	$git add  first_git_file.txt  nn.txt   		 #把文件添加到仓库，git add . 表示添加当前目录下所有文件到仓库
+	$git commit -m "提交我的文件 first_git_file1"    #把文件提交到仓库
+	$git push origin master				 #上传到github	
+
+	代码回滚
+	$git status  					#看看仓库的当前状态，假定修改了某些文件，可看结果
+	$git diff first_git_file.txt			#查看修改的具体内容
+
+同步更新：
+	$git pull
+					
+	

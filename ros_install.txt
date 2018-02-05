@@ -1,0 +1,50 @@
+ros indigo 安装:
+
+   配置ubuntu软件源：
+   添加软件源到sources.list:
+	$ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+   设置密钥：
+	$wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+   安装：
+	$ sudo apt-get update
+	$ sudo apt-get install ros-indigo-desktop-full
+	$ sudo rosdep init
+	$ rosdep update
+	$ sudo apt-get install python-rosinstall
+	$ echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc #或直接进入.bashrc尾部写入source /opt/ros/indigo/setup.bash
+	$ source ~/.bashrc
+	$ export | grep ROS  			 #检查是否有ROS_ROOT和ROS_PACKAGE_PATH这些环境变量
+   创建ROS工作环境：
+	$ mkdir -p ~/catkin_ws/src
+	$ cd ~/catkin_ws/src
+	$ catkin_init_workspace
+	$ cd ~/catkin_ws/
+	$ catkin_make
+	$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+	$ source ~/.bashrc
+	$ echo $ROS_PACKAGE_PATH 		#检查当前目录是否在环境变量中
+ 
+   编译包:
+        $catkin_make        #编译全部包
+
+        $rosmake packagename #单独编译包
+         
+        
+   其他地方包含路径：比如一个文件夹~/ORB_SLAM2/Examples/ROS下有一包名为TRorb_slam
+	.bashrc中添加
+	export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:~/ORB_SLAM2/Examples/ROS
+	编译：
+	$ cd ~/ORB_SLAM2/Examples/ROS/TRorb_slam
+	$ mkdir build
+	$ cd build
+	$ cmake .. -DROS_BUILD_TYPE=Release
+	$ make -j4
+
+
+卸载：
+	$sudo apt-get autoremove ros-indigo-desktop-full
+
+ananconda:
+	如果安装了anaconda将与ros冲突需要.bashrc中注销
+	#export PATH="/home/"user"/"anaconda version"/bin:$PATH"
+

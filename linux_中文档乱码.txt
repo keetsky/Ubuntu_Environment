@@ -1,0 +1,6 @@
+原因：Linux下默认使用的编码的utf-8 Windows是gb18030 只要统一编码就不会出现乱码的情况了。
+查看可支持的编码格式
+$iconv -l
+$对乱码文档->utf-8
+$iconv -f gbk -t utf-8 github.txt > github.txt.utf8
+

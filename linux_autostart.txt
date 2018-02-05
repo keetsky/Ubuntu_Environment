@@ -1,0 +1,56 @@
+准备一个需要运行程序的sh:
+
+#! /bin/bash
+cd /home/keetsky/test
+./test
+
+对于ros:
+#! /bin/bash 
+source /opt/ros/indigo/setup.bash
+roscore
+
+
+打开终端输入$chmod +x test.sh
+
+打开终端，在终端中执行gnome-session-properties,会弹出一个“启动应用程序首选项”的菜单 
+或 Open the Dash and search for "Startup Applications"
+点击添加:
+名称　注释随便输入
+命令的地方输入
+ gnome-terminal -x /home/keetsky/test.sh
+如果想要后台运行
+则换成
+bash /home/keetsky/test.sh
+
+
+这种方法必须登入后才能运行
+
+
+##########################################################
+法2.
+cd ~/.config/autostart  或 /etc/xdg/autostart
+
+touch test.desktop
+chmode +x test.desktop
+
+gedit test.desktop
+
+填入:
+[Desktop Entry]
+Type=Application
+Exec=\sgnome-terminal -x  /home/keetsky/Desktop/testopencv/testopencv.sh 或 /home/keetsky/Desktop/testopencv/testopencv （其中testopencv为可执行文件）
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=false
+Name[en_US]=test
+Name=test
+Comment[en_US]=
+Comment=
+
+
+
+######################
+终端常开设置 
+打开终端，在Edit –>profile preferences–>title and command tab里面勾选hold the terminal open。
+
+重启电脑，检查是否开机执行。
