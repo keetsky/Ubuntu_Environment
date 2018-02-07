@@ -1,5 +1,7 @@
 下载CUDA8.0 :https://developer.nvidia.com/cuda-release-candidate-download 
-下载CUDNN5.1   ： 
+历史版本:https://developer.nvidia.com/cuda-toolkit-archive
+下载CUDNN6.1   ：https://developer.nvidia.com/rdp/cudnn-download
+因为TensorFlow现在只支持cuda8.0 和cudnn6.0所以安装这个版本 
 windows:
    CUDA:默认
    CUDNN:复制到cuda中相应文件夹下 includ/cudnn.h->include/    lib/* ->lib/  bin/*->bin/
@@ -9,7 +11,7 @@ linux:
 	$ sudo sh cuda_8.0.27_linux.run
 	注意：在选择Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 361.62?(y)es/(n)o/(q)uit: n  其他选择YES
 	如果安装失败可能需要安装缺少依赖库：
-	   $sudo apt-get install freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev
+	   $sudo apt-get install freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev gcc g++
 	设置环境变量(最好将其写在ros环境变量前否则可能导致roscore无法运行或运行出错).bashrc中写入：
 	  export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
 	  export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64\${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
@@ -24,11 +26,13 @@ linux:
 	  /usr/local/cuda-8.0/lib64
 	$ sudo ldconfig
 	验证安装是否完成：
-	  $ nvidia-smi 
+	  $ nvidia-smi
+      $nvcc -V	  
 	测试：
 	  $ cd /usr/local/cuda-8.0/samples/1_Utilities/deviceQuery 
 	  $ sudo make 
           $ ./deviceQuery
+	
 	CUDNN:
 	  解压之后进入目录，在命令行进行如下操作(推荐下载deb文件安装)：
 		$ sudo cp include/cudnn.h /usr/local/cuda/include/
@@ -42,6 +46,22 @@ linux:
 
 如果存在运行opencv程序发送链接cuda opencv相关错误可在程序cmakelists.txt设置：set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 或对生成的CMakeCache.txt修改为CUDA_RUNTIME ：OFF
+
+    CUDNN:
+	    $cd ~
+		$sudo gedit .bashrc 中最后一行写入
+		                  export LD_LIBRARY_PATH=/your/path/to/cudnn/lib64:$LD_LIBRARY_PATH
+		$ source .bashrc
+		$ cd cuda/include
+		$ sudo cp *.h /usr/local/cuda/include/
+		$ sudo chmod a+r /usr/local/cuda/include/cudnn.h
+		
+	  或
+	    $ cd cuda/include
+		$ sudo cp *.h /usr/local/cuda/include/
+		$ cd cuda/lib64 
+		$ sudo cp libcudnn* /usr/local/cuda/lib64/
+		$ sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn* 
 
 
 

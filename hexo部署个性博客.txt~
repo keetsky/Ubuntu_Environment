@@ -7,6 +7,7 @@ next主题配置教程：http://theme-next.iissnan.com/   https://www.cnblogs.co
 	法1:http://www.cnblogs.com/dubaokun/p/3558848.html
 	   下载：http://nodejs.cn/download/  https://nodejs.org/en/download/
 		推荐：wget https://nodejs.org/dist/v4.4.4/node-v4.4.4-linux-x64.tar.xz
+           tar zxvf node-v4.4.4-linux-x64.tar.gz
 	   cd node-v4.4.4-linux-x64/bin
 	   ls
            ./node -v
@@ -263,8 +264,36 @@ next主题配置教程：http://theme-next.iissnan.com/   https://www.cnblogs.co
 
 
 
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+更新升级提示（可以最后看）
+
+更新升级会有不确定因素，即讨厌又麻烦，但是不更新升级怎么能享受新功能呢。
+
+1.npm升级全局安装的模块：
+
+npm update -g
+2.npm升级博客目录下安装的模块，在博客文件夹根目录：
+
+npm update
+3.升级npm自身：
+
+npm install npm -g
+4.升级Node.js到最新版：
+
+npm install -g n
+n latest
+
+
+
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-主题美化：http://www.jianshu.com/p/f054333ac9e6
+主题美化：具体请查看上一目录的  “hexo博客”  文件夹
+
+
+
+	http://www.jianshu.com/p/f054333ac9e6
 1. 网站标题栏背景颜色
     next/source/css/_custom/custom.styl 添加：
 	.site-meta {
@@ -434,26 +463,5 @@ next主题配置教程：http://theme-next.iissnan.com/   https://www.cnblogs.co
     然后再新开个http://localhost:4000  按Ctr+r 刷新查看效果是否改变。
     一步一步来美化页面
 
-
-
-
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-更新升级提示（可以最后看）
-
-更新升级会有不确定因素，即讨厌又麻烦，但是不更新升级怎么能享受新功能呢。
-
-1.npm升级全局安装的模块：
-
-npm update -g
-2.npm升级博客目录下安装的模块，在博客文件夹根目录：
-
-npm update
-3.升级npm自身：
-
-npm install npm -g
-4.升级Node.js到最新版：
-
-npm install -g n
-n latest
 
 

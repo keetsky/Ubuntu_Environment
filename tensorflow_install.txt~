@@ -15,13 +15,13 @@ linux:
 	$ source activate tensorflow #如果是windows 下为：activate tensorflow
 	也可不创建环境中，而直接安装在当前环境中，即不执行以上步骤
 	$ pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.1.0-cp35-cp35m-linux_x86_64.whl  #GPU版本,要求python3.5版本
-	如果下不动：可先到github下载对应  .whl 文件并修改权限放到 anaconda3/lib/python3.5/site-packages或在当前目录下运行：
+	如果下不动：可先到github下载对应  .whl 文件并修改权限放到 anaconda3/lib/python3.5/site-packages或在当前目录下运行,如果是cuda9.0请运行1.5.0版本：
 	$ pip install --ignore-installed --upgrade tensorflow_gpu-1.1.0-cp35-cp35m-linux_x86_64.whl
 	如果失败则anaconda3要改权限:
 	  sudo chmod 777 –R anaconda3	
 	  or升级下pip: 
 	  $pip install –upgrade pip
-	
+    发现cuda8.0不支持-1.5.0版本，出现ImportError:libcublas.so.9.0错误,需要版本退回1.4.0:pip install tensorflow-gpu==1.4	
     非ananconda环境可直接：
 	sudo pip install tensorflow-0.8.0-cp27-none-linux_x86_64.whl
   法2：通过anaconda他人上传的源安装

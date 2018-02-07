@@ -9,9 +9,35 @@ opencv基本上是搞CV必备套件之一了，支持的语言也非常多，但
     $pkg-config --modversion opencv
      pkg-config --cflags opencv  
      pkg-config --libs opencv 
+############################################################################################
+install opencv2.4.13
+[compiler] sudo apt-get install build-essential
+[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+[optional] sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+cd ~/opencv
+mkdir release
+cd release
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+make
+sudo make install
 
 
+推荐使用cmake-gui安装可查看详细信息
 
+python选项
+
+[optional] Building python. Set the following python parameters:
+PYTHON2(3)_EXECUTABLE = <path to python>
+PYTHON_INCLUDE_DIR = /usr/include/python<version>    
+PYTHON_INCLUDE_DIR2 = /usr/include/x86_64-linux-gnu/python<version>
+PYTHON_LIBRARY = /usr/lib/x86_64-linux-gnu/libpython<version>.so
+PYTHON2(3)_NUMPY_INCLUDE_DIRS = /usr/lib/python<version>/dist-packages/numpy/core/include/    如/home/keetsky/anaconda2/lib/python2.7/site-packages/numpy/core/include
+
+
+我们操作系统python依赖包的位置是/usr/lib/python2.7下，所以刚才如果编译到/usr下是直接可以用的，不过这个也不重要，只要我们将这两个文件复制到正确的目录下，那么就能正常使用OpenCV的功能了，
+执行： cp /usr/local/lib/python2.7/site-packages/cv* /usr/lib/python2.7/site-packages/ 复制过去之后进入python交互式界面执行 import cv2 没有报错则安装成功
+
+#############################################################################################
 anaconda:
   (1). $pip install --upgrade pip
        $pip install opencvda***dfd.whl		  #安装已下载的包或.whl文件
@@ -64,9 +90,11 @@ anaconda:
 
 	或
 	sudo apt-get install cmake-qt-gui
-	mkdir build
-	cd build
-	cmake-gui
+	mkdir release
+	cd release
+	cmake-gui ..
+	make -j4
+	sudo make install
 	
 	
 
