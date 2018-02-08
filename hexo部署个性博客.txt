@@ -6,7 +6,8 @@ next主题配置教程：http://theme-next.iissnan.com/   https://www.cnblogs.co
     Nodejs安装：
 	法1:http://www.cnblogs.com/dubaokun/p/3558848.html
 	   下载：http://nodejs.cn/download/  https://nodejs.org/en/download/
-		推荐：wget https://nodejs.org/dist/v4.4.4/node-v4.4.4-linux-x64.tar.xz
+           推荐:https://nodejs.org/dist/  下载latest-v4.x/node-v4.8.7-linux-arm64.tar.gz
+		：wget https://nodejs.org/dist/v4.4.4/node-v4.4.4-linux-x64.tar.xz
            tar zxvf node-v4.4.4-linux-x64.tar.gz
 	   cd node-v4.4.4-linux-x64/bin
 	   ls

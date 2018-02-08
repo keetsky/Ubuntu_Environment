@@ -21,7 +21,7 @@ linux:
 	  sudo chmod 777 –R anaconda3	
 	  or升级下pip: 
 	  $pip install –upgrade pip
-    发现cuda8.0不支持-1.5.0版本，出现ImportError:libcublas.so.9.0错误,需要版本退回1.4.0:pip install tensorflow-gpu==1.4	
+    发现cuda8.0不支持-1.5.0版本(1.5.0对应的为cuda9.0)，出现ImportError:libcublas.so.9.0错误,需要版本退回1.4.0:pip install tensorflow-gpu==1.4	
     非ananconda环境可直接：
 	sudo pip install tensorflow-0.8.0-cp27-none-linux_x86_64.whl
   法2：通过anaconda他人上传的源安装

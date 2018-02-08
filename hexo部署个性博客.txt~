@@ -10,7 +10,7 @@ next主题配置教程：http://theme-next.iissnan.com/   https://www.cnblogs.co
            tar zxvf node-v4.4.4-linux-x64.tar.gz
 	   cd node-v4.4.4-linux-x64/bin
 	   ls
-           ./node -v
+           ./node -v     版本查看
 	    链接： ln -s /home/keetsky/node-v4.4.4-linux-x64/bin/node /usr/local/bin/node  
 	    	   ln -s /home/keetsky/node-v4.4.4-linux-x64/bin/npm /usr/local/bin/npm
             pwd   可以看到path

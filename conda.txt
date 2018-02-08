@@ -20,7 +20,7 @@ linux:安装完ananconda后
 	$source deactivate python34		  #解除这个环境，切回默认root环境
 	$conda remove --name python34 --all 	  #删除这个环境
 	$conda info -e 				  #查看已安装的环境有哪些
-	$conda install anaconda                   #当前环境下安装ananconda包集合
+	$conda install anaconda                   #当前环境下安装anaconda包集合
 	$conda create -n python34 python=3.4 anaconda #一句话包含
 	默认激活的是root版本，如果需要开机指定版本将export PATH="~/anaconda3/bin:$PATH"替换为export PATH="~/anaconda/envs/python34/bin:$PATH"   或不替换，需再增加一句 source activate python34
 	如果需要切换回linux系统自带版本，需要注销#export PATH="~/anaconda3/bin:$PATH"
@@ -44,6 +44,15 @@ linux:安装完ananconda后
 	$conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 	$conda config --set show_channel_urls yes
 	#执行后会生成～/.condarc  (linux中) ，C:\Users\USER_NAME\.condarc (windows中)
+        channels:
+	- https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+        - defaults
+        show_channel_urls: true
+
+    pip 的镜像源地址也换成国内，修改 ~/.pip/pip.conf (Linux/Mac) 或 C:\Users\当前用户名\pip\pip.ini (Windows) 配置：
+      [global]
+      trusted-host =  pypi.douban.com
+      index-url = http://pypi.douban.com/simple
 	不设置国内镜像的话可使用VPN代理来加速下载速度
     编译环境运行：
 	$spyder 				#终端输入spyder
@@ -58,10 +67,21 @@ linux:安装完ananconda后
 ROS:
 	如果安装了anaconda将与ros冲突需要.bashrc中注销
 	#export PATH="/home/"user"/"anaconda version"/bin:$PATH"
+#####################################################################
+anaconda2 3 共存:
 	
 windows:
     下载anaconda2 安装完后 假定安装在D:\Anaconda2
 	 下载anaconda3点击安装，选择安装在D:\Anaconda2\envs/python3
 	  在advanced optins 下都不要打钩。
 	  激活python3：activate python3
-	 
+或
+  $ conda create --name py3 python=3.6 anaconda
+  $ conda create --name py2 python=2.7 anaconda
+  # 激活 py2 环境
+  $ activate test_py2  # windows
+  $ source activate test_py2 # linux/ma
+  # 切换激活到 py3 环境
+  $ activate py3  # windows
+  $ source activate py3 # linux/ma
+
